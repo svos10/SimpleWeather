@@ -58,6 +58,7 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
 
     implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0'
     implementation 'com.github.pwittchen:weathericonview:1.1.0'
 
     testImplementation 'junit:junit:4.12'

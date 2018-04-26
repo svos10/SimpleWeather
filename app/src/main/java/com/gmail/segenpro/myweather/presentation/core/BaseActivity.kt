@@ -6,10 +6,6 @@ import butterknife.ButterKnife
 import butterknife.Unbinder
 import com.arellomobile.mvp.MvpAppCompatActivity
 
-/**
- * Created by home on 21.04.18.
- *
- */
 abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     private lateinit var unbinder: Unbinder
