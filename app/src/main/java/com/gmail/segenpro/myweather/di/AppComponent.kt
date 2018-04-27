@@ -1,7 +1,8 @@
 package com.gmail.segenpro.myweather.di
 
-import android.content.Context
-import com.gmail.segenpro.myweather.presentation.main.MainActivity
+import com.gmail.segenpro.myweather.MyWeatherApp
+import com.gmail.segenpro.myweather.presentation.forecast.ForecastPresenter
+import com.gmail.segenpro.myweather.presentation.main.MainPresenter
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -10,7 +11,9 @@ import javax.inject.Singleton
 @Component(modules = [(AppModule::class)])
 interface AppComponent {
 
-    fun inject(activity: MainActivity)
+    fun inject(presenter: MainPresenter)
+
+    fun inject(presenter: ForecastPresenter)
 
     @Component.Builder
     interface Builder {
@@ -18,6 +21,6 @@ interface AppComponent {
         fun build(): AppComponent
 
         @BindsInstance
-        fun context(context: Context): Builder
+        fun app(myWeatherApp: MyWeatherApp): Builder
     }
 }
