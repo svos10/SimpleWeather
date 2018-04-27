@@ -6,6 +6,7 @@ import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import com.gmail.segenpro.myweather.R
+import com.gmail.segenpro.myweather.presentation.charts.ChartsFragment
 import com.gmail.segenpro.myweather.presentation.forecast.ForecastFragment
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
@@ -16,6 +17,7 @@ class Navigator(activity: FragmentActivity) : SupportAppNavigator(activity, CONT
     override fun createFragment(screenKey: String?, data: Any?): Fragment? = screenKey?.let {
         when (screenKey) {
             FORECAST -> ForecastFragment.newInstance()
+            CHARTS -> ChartsFragment.newInstance()
             else -> null
         }
     }

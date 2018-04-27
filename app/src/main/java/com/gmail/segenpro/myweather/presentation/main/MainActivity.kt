@@ -12,7 +12,7 @@ class MainActivity : BaseActivity(), MainView {
     }
 
     @InjectPresenter
-    lateinit var mainPresenter: MainPresenter
+    lateinit var presenter: MainPresenter
 
     override fun getLayoutResId(): Int {
         return R.layout.activity_main

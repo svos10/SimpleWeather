@@ -18,6 +18,6 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     private fun openForecast() {
-        router.navigateTo(FORECAST)
+        router.replaceScreen(FORECAST)
     }
 }
