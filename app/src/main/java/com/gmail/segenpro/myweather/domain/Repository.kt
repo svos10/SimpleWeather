@@ -3,11 +3,11 @@ package com.gmail.segenpro.myweather.domain
 import io.reactivex.Observable
 import io.reactivex.Single
 
-interface Repository {
+interface Repository<T> {
 
-    fun <T> observe(): Observable<T>
+    fun observe(): Observable<T>
 
-    fun <T> observeSingle(): Single<T>
+    fun observeSingle(): Single<T>
 
-    fun <T> setAndObserve(value: T): Observable<T>
+    fun setAndObserveSingle(value: T): Single<T>
 }

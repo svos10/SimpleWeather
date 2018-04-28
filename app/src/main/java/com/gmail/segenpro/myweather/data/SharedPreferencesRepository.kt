@@ -6,19 +6,18 @@ import com.gmail.segenpro.myweather.domain.Repository
 import io.reactivex.Observable
 import io.reactivex.Single
 
+abstract class SharedPreferencesRepository<T>(private val rxSharedPreferences: RxSharedPreferences) : Repository<T> {
 
-abstract class SharedPreferencesRepository(private val rxSharedPreferences: RxSharedPreferences) : Repository {
+    abstract fun getPreference(rxSharedPreferences: RxSharedPreferences): Preference<T>
 
-    abstract fun <T> getPreference(rxSharedPreferences: RxSharedPreferences): Preference<T>
+    abstract fun getDefault(): T
 
-    abstract fun <T> getDefault(): T
+    override fun observe(): Observable<T> = getPreference(rxSharedPreferences).asObservable()
 
-    override fun <T> observe(): Observable<T> = getPreference<T>(rxSharedPreferences).asObservable()
+    override fun observeSingle(): Single<T> = observe().single(getDefault())
 
-    override fun <T> observeSingle(): Single<T> = observe<T>().single(getDefault())
-
-    override fun <T> setAndObserve(value: T): Observable<T> = Observable.fromCallable {
-        getPreference<T>(rxSharedPreferences).set(value)
+    override fun setAndObserveSingle(value: T): Single<T> = Single.fromCallable {
+        getPreference(rxSharedPreferences).set(value)
         value
     }
 }

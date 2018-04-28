@@ -10,7 +10,7 @@ class ChartsFragment : BaseFragment(), ChartsView {
     lateinit var presenter: ChartsPresenter
 
     override fun getLayoutResId(): Int {
-        return R.layout.fragment_forecast
+        return R.layout.fragment_charts
     }
 
     companion object {

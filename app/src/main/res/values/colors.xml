@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="delimiter">#7f7f7f</color>
+    <color name="active_tab_bar_item">#7eb77c</color>
+    <color name="inactive_tab_bar_item">@android:color/black</color>
 </resources>

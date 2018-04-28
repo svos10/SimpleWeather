@@ -21,23 +21,21 @@
         android:layout_height="@dimen/tab_bar_item_size"
         android:orientation="horizontal">
 
-        <com.github.pwittchen.weathericonview.WeatherIconView
+        <com.gmail.segenpro.myweather.presentation.core.widgets.TabBarButton
             android:id="@+id/forecast"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            app:weatherIconColor="@android:color/black"
             app:weatherIconResource="@string/wi_day_sunny"
             app:weatherIconSize="25" />
 
-        <com.github.pwittchen.weathericonview.WeatherIconView
+        <com.gmail.segenpro.myweather.presentation.core.widgets.TabBarButton
             android:id="@+id/charts"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            app:weatherIconColor="@android:color/black"
             app:weatherIconResource="@string/wi_cloud"
             app:weatherIconSize="25" />
     </LinearLayout>
