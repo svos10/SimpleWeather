@@ -17,9 +17,15 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
+            buildConfigField "String", "APIXU_API_KEY", rootProject.ext.apixuApiKey
+        }
+        release {
+            minifyEnabled true
+            useProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "APIXU_API_KEY", rootProject.ext.apixuApiKey
         }
     }
 }
@@ -56,6 +62,8 @@ dependencies {
     ext.retrofitVersion = '2.4.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
 
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0'

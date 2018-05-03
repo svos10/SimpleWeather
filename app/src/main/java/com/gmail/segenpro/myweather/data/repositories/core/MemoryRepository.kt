@@ -1,4 +1,4 @@
-package com.gmail.segenpro.myweather.data
+package com.gmail.segenpro.myweather.data.repositories.core
 
 import com.gmail.segenpro.myweather.domain.Repository
 import io.reactivex.Observable
@@ -11,11 +11,11 @@ abstract class MemoryRepository<T> : Repository<T> {
 
     abstract fun getDefault(): T
 
-    override fun observe(): Observable<T> = subject.hide()
+    final override fun observe(): Observable<T> = subject.hide()
 
-    override fun observeSingle(): Single<T> = observe().single(getDefault())
+    final override fun observeSingle(): Single<T> = observe().single(getDefault())
 
-    override fun setAndObserveSingle(value: T): Single<T> = Single.fromCallable {
+    final override fun setAndObserveSingle(value: T): Single<T> = Single.fromCallable {
         subject.onNext(value)
         value
     }

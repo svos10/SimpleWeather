@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import com.gmail.segenpro.myweather.R
 import com.gmail.segenpro.myweather.domain.AppSection
-import com.gmail.segenpro.myweather.presentation.charts.ChartsFragment
+import com.gmail.segenpro.myweather.presentation.history.HistoryFragment
 import com.gmail.segenpro.myweather.presentation.forecast.ForecastFragment
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
@@ -18,7 +18,7 @@ class Navigator(activity: FragmentActivity) : SupportAppNavigator(activity, CONT
     override fun createFragment(screenKey: String?, data: Any?): Fragment? = screenKey?.let {
         when (screenKey) {
             AppSection.FORECAST.name -> ForecastFragment.newInstance()
-            AppSection.CHARTS.name -> ChartsFragment.newInstance()
+            AppSection.CHARTS.name -> HistoryFragment.newInstance()
             else -> null
         }
     }

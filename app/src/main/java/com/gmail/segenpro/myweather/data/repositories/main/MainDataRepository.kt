@@ -1,6 +1,6 @@
-package com.gmail.segenpro.myweather.data.main
+package com.gmail.segenpro.myweather.data.repositories.main
 
-import com.gmail.segenpro.myweather.data.MemoryRepository
+import com.gmail.segenpro.myweather.data.repositories.core.MemoryRepository
 import com.gmail.segenpro.myweather.domain.AppSection
 import com.gmail.segenpro.myweather.domain.main.MainRepository
 import javax.inject.Inject

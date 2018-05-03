@@ -22,7 +22,7 @@ class MainPresenter : BasePresenter<MainView>() {
                 .subscribe({ appSection ->
                     viewState.selectAppSection(appSection)
                     router.replaceScreen(appSection.name)
-                })
+                }, this::onError)
                 .unsubscribeOnDestroy()
     }
 

@@ -1,4 +1,4 @@
-package com.gmail.segenpro.myweather.data
+package com.gmail.segenpro.myweather.data.repositories.core
 
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
@@ -12,11 +12,11 @@ abstract class SharedPreferencesRepository<T>(private val rxSharedPreferences: R
 
     abstract fun getDefault(): T
 
-    override fun observe(): Observable<T> = getPreference(rxSharedPreferences).asObservable()
+    final override fun observe(): Observable<T> = getPreference(rxSharedPreferences).asObservable()
 
-    override fun observeSingle(): Single<T> = observe().single(getDefault())
+    final override fun observeSingle(): Single<T> = observe().single(getDefault())
 
-    override fun setAndObserveSingle(value: T): Single<T> = Single.fromCallable {
+    final override fun setAndObserveSingle(value: T): Single<T> = Single.fromCallable {
         getPreference(rxSharedPreferences).set(value)
         value
     }

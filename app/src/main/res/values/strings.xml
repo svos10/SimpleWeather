@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">My Weather</string>
+    <string name="temperature">Temperature %1$s \u00B0C</string>
+    <string name="wind">Wind: %1$s km/h</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="two_days_ago">Two days ago</string>
+    <string name="three_days_ago">Three days ago</string>
 </resources>

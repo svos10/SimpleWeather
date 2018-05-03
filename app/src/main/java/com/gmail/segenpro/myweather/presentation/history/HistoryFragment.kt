@@ -1,20 +1,20 @@
-package com.gmail.segenpro.myweather.presentation.charts
+package com.gmail.segenpro.myweather.presentation.history
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.gmail.segenpro.myweather.R
 import com.gmail.segenpro.myweather.presentation.core.BaseFragment
 
-class ChartsFragment : BaseFragment(), ChartsView {
+class HistoryFragment : BaseFragment(), HistoryView {
 
     @InjectPresenter
-    lateinit var presenter: ChartsPresenter
+    lateinit var presenter: HistoryPresenter
 
     override fun getLayoutResId(): Int {
-        return R.layout.fragment_charts
+        return R.layout.fragment_history
     }
 
     companion object {
 
-        fun newInstance() = ChartsFragment()
+        fun newInstance() = HistoryFragment()
     }
 }
