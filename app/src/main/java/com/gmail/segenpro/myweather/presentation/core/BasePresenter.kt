@@ -28,7 +28,11 @@ abstract class BasePresenter<View : BaseView> : MvpPresenter<View>() {
 
     protected fun onError(error: Throwable) {
         error.printStackTrace()
-        //todo решить, что делать с ошибками
+        viewState.showError(error)
+    }
+
+    protected fun showProgress(isShown: Boolean) {
+        viewState.showProgress(isShown)
     }
 
     override fun onDestroy() {

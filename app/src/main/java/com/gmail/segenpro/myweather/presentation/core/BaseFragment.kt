@@ -9,16 +9,14 @@ import butterknife.ButterKnife
 import butterknife.Unbinder
 import com.arellomobile.mvp.MvpAppCompatFragment
 
-/**
- * Created by home on 21.04.18.
- *
- */
 abstract class BaseFragment : MvpAppCompatFragment(), BaseView {
 
     private lateinit var unbinder: Unbinder
 
     @LayoutRes
     protected abstract fun getLayoutResId(): Int
+
+    abstract override fun showError(throwable: Throwable)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)

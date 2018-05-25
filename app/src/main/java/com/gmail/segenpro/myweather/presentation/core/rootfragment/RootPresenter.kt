@@ -1,24 +1,27 @@
-package com.gmail.segenpro.myweather.presentation.main
+package com.gmail.segenpro.myweather.presentation.core.rootfragment
 
 import com.arellomobile.mvp.InjectViewState
 import com.gmail.segenpro.myweather.di.AppComponent
 import com.gmail.segenpro.myweather.domain.AppSection
 import com.gmail.segenpro.myweather.domain.main.MainInteractor
+import com.gmail.segenpro.myweather.domain.weather.WeatherInteractor
 import com.gmail.segenpro.myweather.presentation.core.BasePresenter
 import javax.inject.Inject
 
 @InjectViewState
-class MainPresenter : BasePresenter<MainView>() {
+class RootPresenter : BasePresenter<RootView>() {
 
     @Inject
-    lateinit var interactor: MainInteractor
+    lateinit var mainInteractor: MainInteractor
+
+    lateinit var weatherInteractor: WeatherInteractor//todo-sem delete
 
     override fun inject(appComponent: AppComponent) {
         appComponent.inject(this)
     }
 
     override fun onFirstViewAttach() {
-        interactor.observeAppSection()
+        mainInteractor.observeAppSection()
                 .subscribe({ appSection ->
                     viewState.selectAppSection(appSection)
                     router.replaceScreen(appSection.name)
@@ -35,7 +38,7 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
     private fun open(appSection: AppSection) {
-        interactor.setAppSection(appSection)
+        mainInteractor.setAppSection(appSection)
                 .subscribe({}, this::onError)
     }
 }

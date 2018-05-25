@@ -5,4 +5,7 @@
     <string name="yesterday">Yesterday</string>
     <string name="two_days_ago">Two days ago</string>
     <string name="three_days_ago">Three days ago</string>
+    <string name="no_connection">Connection not available</string>
+    <string name="server_error">Server error is occurred</string>
+    <string name="try_again">Try again</string>
 </resources>
