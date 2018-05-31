@@ -18,4 +18,21 @@ data class DayDto(
         @SerializedName("avghumidity") val avgHumidityInPercentage: Int?,
         @SerializedName("condition") val conditionDto: ConditionDto?,
         @SerializedName("uv") val ultravioletIndex: Float?
-)
+) : BaseDto {
+
+    override fun isValid(): Boolean = maxTemperatureInCelsius != null
+            && maxTemperatureInFahrenheit != null
+            && minTemperatureInCelsius != null
+            && minTemperatureInFahrenheit != null
+            && avgTemperatureInCelsius != null
+            && avgTemperatureInFahrenheit != null
+            && maxWindInMph != null
+            && maxWindInKph != null
+            && totalPrecipitationInMillimeters != null
+            && totalPrecipitationInInches != null
+            && avgVisibilityInKm != null
+            && avgVisibilityInMiles != null
+            && avgHumidityInPercentage != null
+            && conditionDto?.isValid() ?: false
+            && ultravioletIndex != null
+}

@@ -1,7 +1,7 @@
 package com.gmail.segenpro.myweather.data.network
 
 enum class ErrorType {
-    NETWORK_UNAVAILABLE, SERVER_ERROR, APP_ERROR
+    NETWORK_UNAVAILABLE, SERVER_ERROR, SERVER_DATA_ERROR, APP_ERROR
 }
 
 data class WeatherException(val errorType: ErrorType,

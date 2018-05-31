@@ -4,11 +4,14 @@ import android.content.Context
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.widget.TextView
 import butterknife.BindView
 import butterknife.OnClick
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.gmail.segenpro.myweather.MyWeatherApp
 import com.gmail.segenpro.myweather.R
+import com.gmail.segenpro.myweather.data.network.ErrorType
+import com.gmail.segenpro.myweather.data.network.WeatherException
 import com.gmail.segenpro.myweather.domain.AppSection
 import com.gmail.segenpro.myweather.presentation.core.BaseFragment
 import com.gmail.segenpro.myweather.presentation.core.navigator.Navigator
@@ -22,7 +25,10 @@ class RootFragment : BaseFragment(), RootView {
     @BindView(R.id.charts)
     lateinit var chartsButton: TabBarButton
 
-    @BindView(R.id.layout_error)
+    @BindView(R.id.error_text_view)
+    lateinit var errorText: TextView
+
+    @BindView(R.id.error_layout)
     lateinit var errorLayout: View
 
     @BindView(R.id.layout_progress)
@@ -39,9 +45,7 @@ class RootFragment : BaseFragment(), RootView {
     @InjectPresenter
     lateinit var presenter: RootPresenter
 
-    override fun getLayoutResId(): Int {
-        return R.layout.fragment_root
-    }
+    override fun getLayoutResId() = R.layout.fragment_root
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -58,25 +62,37 @@ class RootFragment : BaseFragment(), RootView {
         MyWeatherApp.instance.cicerone.navigatorHolder.removeNavigator()
     }
 
-    override fun selectAppSection(appSection: AppSection) {
-        for (i in 0 until tabBarButtons.size) {
-            tabBarButtons[i].select(appSection.ordinal == i)
+    override fun selectAppSection(appSection: AppSection) =
+            (0 until tabBarButtons.size).forEach {
+                tabBarButtons[it].select(appSection.ordinal == it)
+            }
+
+    @OnClick(R.id.forecast)
+    fun onForecastClick() = presenter.openForecast()
+
+    @OnClick(R.id.charts)
+    fun onChartsClick() = presenter.openCharts()
+
+    @OnClick(R.id.try_again)
+    fun onTryAgainClick() = presenter.onTryAgainClicked()
+
+    fun showError(weatherException: WeatherException) {
+        @Suppress("NON_EXHAUSTIVE_WHEN")
+        when (weatherException.errorType) {
+            ErrorType.NETWORK_UNAVAILABLE -> {
+                errorLayout.visibility = VISIBLE
+                errorText.visibility = GONE
+            }
+            ErrorType.SERVER_ERROR, ErrorType.SERVER_DATA_ERROR -> {
+                errorLayout.visibility = GONE
+                errorText.visibility = VISIBLE
+            }
         }
     }
 
-    @OnClick(R.id.forecast)
-    fun onForecastClick() {
-        presenter.openForecast()
-    }
-
-    @OnClick(R.id.charts)
-    fun onChartsClick() {
-        presenter.openCharts()
-    }
-
-    override fun showError(throwable: Throwable) {
-        errorLayout.visibility = VISIBLE
-        //todo настроить отображение для разных ошибок: отсутствие подключения, сетевые ошибки, другие ошибки
+    override fun hideError() {
+        errorLayout.visibility = GONE
+        errorText.visibility = GONE
     }
 
     override fun showProgress(isShown: Boolean) {

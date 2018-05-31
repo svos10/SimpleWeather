@@ -11,4 +11,14 @@ data class LocationDto(
         @SerializedName("tz_id") val timeZone: String?,
         @SerializedName("localtime_epoch") val localtimeEpoch: Int?,
         @SerializedName("localtime") val localtime: String?
-)
+) : BaseDto {
+
+    override fun isValid(): Boolean = latitudeInDegrees != null
+            && longitudeInDegrees != null
+            && name != null
+            && region != null
+            && country != null
+            && timeZone != null
+            && localtimeEpoch != null
+            && localtime != null
+}

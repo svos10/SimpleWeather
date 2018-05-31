@@ -8,4 +8,10 @@ data class ForecastDayDetailsDto(
         @SerializedName("date_epoch") val dateEpoch: Int?,
         @SerializedName("day") val day: DayDto?,
         @SerializedName("astro") val astro: AstroDto?
-)
+) : BaseDto {
+
+    override fun isValid(): Boolean = date != null
+            && dateEpoch != null
+            && day?.isValid() ?: false
+            && astro?.isValid() ?: false
+}

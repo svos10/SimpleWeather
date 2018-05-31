@@ -12,7 +12,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
             <FrameLayout
                 android:id="@+id/content_container"
@@ -24,6 +24,16 @@
                 layout="@layout/layout_progress"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/error_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@color/background"
+                android:gravity="center"
+                android:text="@string/server_error"
                 android:visibility="gone" />
         </FrameLayout>
 
@@ -58,9 +68,9 @@
     </LinearLayout>
 
     <include
-        android:id="@+id/layout_error"
+        android:id="@+id/error_layout"
         layout="@layout/layout_error"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:visibility="invisible" />
 </FrameLayout>

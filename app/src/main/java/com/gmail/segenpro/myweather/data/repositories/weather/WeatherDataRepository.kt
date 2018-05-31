@@ -1,41 +1,36 @@
 package com.gmail.segenpro.myweather.data.repositories.weather
 
-import com.gmail.segenpro.myweather.data.network.ErrorType
-import com.gmail.segenpro.myweather.data.network.WeatherException
+import android.content.Context
+import com.gmail.segenpro.myweather.data.asErrorResult
+import com.gmail.segenpro.myweather.data.asResult
+import com.gmail.segenpro.myweather.data.network.Result
 import com.gmail.segenpro.myweather.data.network.WeatherService
-import com.gmail.segenpro.myweather.data.network.dto.ErrorWrapperDto
+import com.gmail.segenpro.myweather.data.network.dto.ForecastResponseDto
+import com.gmail.segenpro.myweather.data.network.mappers.Mapper
+import com.gmail.segenpro.myweather.data.retrofitResponseToResult
 import com.gmail.segenpro.myweather.domain.core.models.Forecast
 import com.gmail.segenpro.myweather.domain.weather.WeatherRepository
 import com.google.gson.Gson
-import io.reactivex.Observable
 import io.reactivex.Single
-import retrofit2.HttpException
-import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class WeatherDataRepository @Inject constructor(private val weatherService: WeatherService,
+class WeatherDataRepository @Inject constructor(private val context: Context,
+                                                private val weatherService: WeatherService,
+                                                private val forecastMapper: Mapper<ForecastResponseDto, Forecast>,
                                                 private val gson: Gson) : WeatherRepository {
 
-    override fun getForecast(locationName: String, daysCount: Int): Single<Forecast> {
+    override fun getForecast(locationName: String, daysCount: Int): Single<Result<Forecast>> {
         return weatherService.getForecast(locationName, daysCount)
-                .onErrorResumeNext({ throwable ->
-                    when (throwable) {
-                        is IOException -> Single.error(WeatherException(ErrorType.NETWORK_UNAVAILABLE))
-                        is HttpException -> {
-                            val jsonString = throwable.response()?.errorBody()?.string() ?: ""
-                            val errorWrapperDto: ErrorWrapperDto? = gson.fromJson(jsonString, ErrorWrapperDto::class.java)
-                            var weatherException = WeatherException(ErrorType.SERVER_ERROR)
-                            if (errorWrapperDto?.errorDto?.code != null && errorWrapperDto.errorDto.text != null) {
-                                weatherException = WeatherException(ErrorType.SERVER_ERROR,
-                                        errorWrapperDto.errorDto.code, errorWrapperDto.errorDto.text)
-                            }
-                            Single.error(weatherException)
-                        }
-                        else -> Single.error(WeatherException(ErrorType.APP_ERROR))
+                .retrofitResponseToResult(context, gson)
+                .map {
+                    when (it) {
+                        is Result.Success -> forecastMapper.map(it.data).asResult()
+                        is Result.Error -> it.weatherException.asErrorResult()
                     }
-                })
-                .map { Forecast(0f, "", "", 0f) }//todo-sem delete
+                }
     }
+
+    //todo написать функцию getHistory
 }

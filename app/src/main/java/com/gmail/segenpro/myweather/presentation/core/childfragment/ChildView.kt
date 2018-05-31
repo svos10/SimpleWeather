@@ -1,15 +1,14 @@
-package com.gmail.segenpro.myweather.presentation.core.rootfragment
+package com.gmail.segenpro.myweather.presentation.core.childfragment
 
-import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import com.gmail.segenpro.myweather.domain.AppSection
+import com.gmail.segenpro.myweather.data.network.WeatherException
 import com.gmail.segenpro.myweather.presentation.core.BaseView
 
-interface RootView : BaseView {
+interface ChildView : BaseView {
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
-    fun selectAppSection(appSection: AppSection)
+    @StateStrategyType(OneExecutionStateStrategy::class)
+    fun showError(weatherException: WeatherException)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun hideError()

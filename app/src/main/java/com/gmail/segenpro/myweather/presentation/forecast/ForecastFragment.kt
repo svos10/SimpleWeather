@@ -1,13 +1,14 @@
 package com.gmail.segenpro.myweather.presentation.forecast
 
-import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import butterknife.BindView
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.gmail.segenpro.myweather.GlideApp
 import com.gmail.segenpro.myweather.R
 import com.gmail.segenpro.myweather.domain.core.models.Forecast
 import com.gmail.segenpro.myweather.presentation.core.childfragment.ChildFragment
+import com.gmail.segenpro.myweather.presentation.utils.getFullUrlFromProtocolRelative
 
 class ForecastFragment : ChildFragment(), ForecastView {
 
@@ -31,11 +32,10 @@ class ForecastFragment : ChildFragment(), ForecastView {
     }
 
     override fun updateState(forecast: Forecast) {
-        Log.d("semLog", javaClass.simpleName + "@" + hashCode() + ", updateState(), forecast = $forecast")
-        temperature.text = forecast.temperatureInCelsius.toString()
+        temperature.text = getString(R.string.temperature, forecast.temperatureInCelsius.toString())
+        wind.text = getString(R.string.wind,forecast.windInMetersPerSecond.toString())
         description.text = forecast.description
-        wind.text = forecast.windInKph.toString()
-        // todo load icon
+        GlideApp.with(this).load(getFullUrlFromProtocolRelative(forecast.icon)).into(icon)
     }
 
     companion object {

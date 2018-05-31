@@ -16,8 +16,6 @@ abstract class BaseFragment : MvpAppCompatFragment(), BaseView {
     @LayoutRes
     protected abstract fun getLayoutResId(): Int
 
-    abstract override fun showError(throwable: Throwable)
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(getLayoutResId(), container, false)

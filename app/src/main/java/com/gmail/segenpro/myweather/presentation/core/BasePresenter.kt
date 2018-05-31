@@ -26,15 +26,6 @@ abstract class BasePresenter<View : BaseView> : MvpPresenter<View>() {
         compositeDisposable.add(this)
     }
 
-    protected fun onError(error: Throwable) {
-        error.printStackTrace()
-        viewState.showError(error)
-    }
-
-    protected fun showProgress(isShown: Boolean) {
-        viewState.showProgress(isShown)
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.dispose()

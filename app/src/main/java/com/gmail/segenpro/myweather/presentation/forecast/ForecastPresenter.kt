@@ -1,19 +1,20 @@
 package com.gmail.segenpro.myweather.presentation.forecast
 
 import com.arellomobile.mvp.InjectViewState
+import com.gmail.segenpro.myweather.data.network.Result
 import com.gmail.segenpro.myweather.di.AppComponent
 import com.gmail.segenpro.myweather.domain.weather.WeatherInteractor
-import com.gmail.segenpro.myweather.presentation.core.BasePresenter
+import com.gmail.segenpro.myweather.presentation.core.childfragment.ChildPresenter
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 private const val FORECAST_INTERVAL_IN_MINUTES = 10L
-//private const val FORECAST_INTERVAL = 5L
 
 @InjectViewState
-class ForecastPresenter : BasePresenter<ForecastView>() {
+class ForecastPresenter : ChildPresenter<ForecastView>() {
 
     @Inject
     lateinit var weatherInteractor: WeatherInteractor
@@ -24,18 +25,28 @@ class ForecastPresenter : BasePresenter<ForecastView>() {
 
     override fun onFirstViewAttach() {
         showProgress(true)
-        Observable.interval(0, FORECAST_INTERVAL_IN_MINUTES, TimeUnit.MINUTES)
-        //Observable.interval(0, FORECAST_INTERVAL, TimeUnit.SECONDS/*, Schedulers.io()*/)
-                //.doOnNext { value -> Log.d("semLog", javaClass.simpleName + "@" + hashCode() + ", interval(), thread = ${Thread.currentThread().id}, value = $value") }
-                .flatMapSingle { weatherInteractor.getForecast() }
-                //.flatMapSingle { Single.just(Forecast(0f, "", "", 0f)).delay(2L, TimeUnit.SECONDS) }
+        Observable.merge(Observable.interval(0, FORECAST_INTERVAL_IN_MINUTES, TimeUnit.MINUTES), observeReloadContentRequest())
+                .observeOn(Schedulers.io())
+                .flatMapSingle { value ->
+                    weatherInteractor.getForecast()
+                            .map { result ->
+                                if (value == 0L && result is Result.Error) {
+                                    result.copy(isShown = true)
+                                } else {
+                                    result
+                                }
+                            }
+                }
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnEach { showProgress(false) }
-                .doOnError { showProgress(false) }
-                //.doOnNext { forecast -> Log.d("semLog", javaClass.simpleName + "@" + hashCode() + ", interval(), forecast = $forecast") }
-                //.doOnError { e -> Log.e("semLog", javaClass.simpleName + "@" + hashCode() + ", interval(), error",e)}
-                .subscribe({ viewState.updateState(it) }, { onError(it) })
+                .doOnEach {
+                    showProgress(false)
+                }
+                .subscribe {
+                    when (it) {
+                        is Result.Success -> viewState.updateState(it.data)
+                        is Result.Error -> onError(it.weatherException, it.isShown)
+                    }
+                }
                 .unsubscribeOnDestroy()
-
     }
 }

@@ -2,4 +2,5 @@
 <resources>
     <dimen name="tab_bar_item_size">50dp</dimen>
     <dimen name="delimiter_width">0.5dp</dimen>
+    <dimen name="icon_size">64dp</dimen>
 </resources>

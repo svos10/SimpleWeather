@@ -14,7 +14,7 @@ abstract class SharedPreferencesRepository<T>(private val rxSharedPreferences: R
 
     final override fun observe(): Observable<T> = getPreference(rxSharedPreferences).asObservable()
 
-    final override fun observeSingle(): Single<T> = observe().single(getDefault())
+    final override fun observeSingle(): Single<T> = observe().first(getDefault())
 
     final override fun setAndObserveSingle(value: T): Single<T> = Single.fromCallable {
         getPreference(rxSharedPreferences).set(value)

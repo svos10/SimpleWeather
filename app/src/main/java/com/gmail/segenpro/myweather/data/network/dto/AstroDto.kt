@@ -7,4 +7,7 @@ data class AstroDto(
         @SerializedName("sunset") val sunset: String?,
         @SerializedName("moonrise") val moonrise: String?,
         @SerializedName("moonset") val moonset: String?
-)
+) : BaseDto {
+
+    override fun isValid(): Boolean = sunrise != null && sunset != null && moonrise != null && moonset != null
+}

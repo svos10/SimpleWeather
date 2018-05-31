@@ -7,4 +7,10 @@ data class ForecastResponseDto(
         @SerializedName("current") val currentDto: CurrentDto?,
         @SerializedName("forecast") val forecastDaysDto: ForecastDaysDto?,
         @SerializedName("error") val errorDto: ErrorDto?
-)
+) : BaseResponseDto {
+
+    override fun isValid(): Boolean = (locationDto?.isValid() ?: false
+            && currentDto?.isValid() ?: false
+            && forecastDaysDto?.isValid() ?: false)
+            || errorDto?.isValid() ?: false
+}

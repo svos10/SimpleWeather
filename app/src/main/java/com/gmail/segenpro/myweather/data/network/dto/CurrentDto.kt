@@ -24,4 +24,26 @@ data class CurrentDto(
         @SerializedName("is_day") val isDay: Int?,
         @SerializedName("vis_km") val visibilityInKm: Float?,
         @SerializedName("vis_miles") val visibilityInMiles: Float?
-)
+) : BaseDto {
+
+    override fun isValid(): Boolean = lastUpdated != null
+            && lastUpdatedEpoch != null
+            && temperatureInCelsius != null
+            && temperatureInFahrenheit != null
+            && feelingTemperatureInCelsius != null
+            && feelingTemperatureInFahrenheit != null
+            && conditionDto?.isValid() ?: false
+            && windInMph != null
+            && windInKph != null
+            && windDirectionInDegrees != null
+            && windDirection != null
+            && pressureInMillibars != null
+            && pressureInInches != null
+            && precipitationInMillimeters != null
+            && precipitationInInches != null
+            && humidityInPercentage != null
+            && cloudInPercentage != null
+            && isDay != null
+            && visibilityInKm != null
+            && visibilityInMiles != null
+}
