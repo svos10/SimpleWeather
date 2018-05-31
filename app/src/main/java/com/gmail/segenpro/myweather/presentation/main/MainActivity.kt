@@ -12,7 +12,5 @@ class MainActivity : AppCompatActivity(), Navigator.OnExitListener {
         setContentView(R.layout.activity_main)
     }
 
-    override fun onExit() {
-        finish()
-    }
+    override fun onExit() = finish()
 }

@@ -27,13 +27,11 @@ class ForecastFragment : ChildFragment(), ForecastView {
     @InjectPresenter
     lateinit var presenter: ForecastPresenter
 
-    override fun getLayoutResId(): Int {
-        return R.layout.fragment_forecast
-    }
+    override fun getLayoutResId() = R.layout.fragment_forecast
 
     override fun updateState(forecast: Forecast) {
         temperature.text = getString(R.string.temperature, forecast.temperatureInCelsius.toString())
-        wind.text = getString(R.string.wind,forecast.windInMetersPerSecond.toString())
+        wind.text = getString(R.string.wind, forecast.windInMetersPerSecond.toString())
         description.text = forecast.description
         GlideApp.with(this).load(getFullUrlFromProtocolRelative(forecast.icon)).into(icon)
     }

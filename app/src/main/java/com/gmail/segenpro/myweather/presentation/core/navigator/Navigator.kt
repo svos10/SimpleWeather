@@ -10,8 +10,8 @@ import com.gmail.segenpro.myweather.presentation.forecast.ForecastFragment
 import com.gmail.segenpro.myweather.presentation.history.HistoryFragment
 import ru.terrakok.cicerone.android.SupportFragmentNavigator
 
-class Navigator(fragmentManager: FragmentManager, @IdRes containerId: Int)
-    : SupportFragmentNavigator(fragmentManager, containerId) {
+class Navigator(fragmentManager: FragmentManager, @IdRes containerId: Int) :
+        SupportFragmentNavigator(fragmentManager, containerId) {
 
     var onExitListener: OnExitListener? = null
 
@@ -27,9 +27,8 @@ class Navigator(fragmentManager: FragmentManager, @IdRes containerId: Int)
         onExitListener?.onExit()
     }
 
-    override fun showSystemMessage(message: String?) {
-        Toast.makeText(MyWeatherApp.instance, message, Toast.LENGTH_SHORT).show()
-    }
+    override fun showSystemMessage(message: String?) =
+            Toast.makeText(MyWeatherApp.instance, message, Toast.LENGTH_SHORT).show()
 
     interface OnExitListener {
         fun onExit()

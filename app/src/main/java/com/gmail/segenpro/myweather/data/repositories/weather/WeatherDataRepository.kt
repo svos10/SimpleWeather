@@ -21,16 +21,15 @@ class WeatherDataRepository @Inject constructor(private val context: Context,
                                                 private val forecastMapper: Mapper<ForecastResponseDto, Forecast>,
                                                 private val gson: Gson) : WeatherRepository {
 
-    override fun getForecast(locationName: String, daysCount: Int): Single<Result<Forecast>> {
-        return weatherService.getForecast(locationName, daysCount)
-                .retrofitResponseToResult(context, gson)
-                .map {
-                    when (it) {
-                        is Result.Success -> forecastMapper.map(it.data).asResult()
-                        is Result.Error -> it.weatherException.asErrorResult()
+    override fun getForecast(locationName: String, daysCount: Int): Single<Result<Forecast>> =
+            weatherService.getForecast(locationName, daysCount)
+                    .retrofitResponseToResult(context, gson)
+                    .map {
+                        when (it) {
+                            is Result.Success -> forecastMapper.map(it.data).asResult()
+                            is Result.Error -> it.weatherException.asErrorResult()
+                        }
                     }
-                }
-    }
 
     //todo написать функцию getHistory
 }

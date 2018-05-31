@@ -6,7 +6,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AppSectionDataRepository @Inject constructor() : MemoryRepository<AppSection>()/*, MainRepository*/ {
+class AppSectionDataRepository @Inject constructor() : MemoryRepository<AppSection>() {
 
     override fun getDefault() = AppSection.FORECAST
 }

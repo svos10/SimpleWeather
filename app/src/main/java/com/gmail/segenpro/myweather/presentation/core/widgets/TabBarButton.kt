@@ -8,21 +8,22 @@ import com.github.pwittchen.weathericonview.WeatherIconView
 import com.gmail.segenpro.myweather.R
 
 class TabBarButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null,
-                                             defStyleAttr: Int = 0)
-    : WeatherIconView(context, attrs, defStyleAttr) {
+                                             defStyleAttr: Int = 0) :
+        WeatherIconView(context, attrs, defStyleAttr) {
 
     @BindColor(R.color.active_tab_bar_item)
-    @JvmField var activeTabBarItemColor = 0
+    @JvmField
+    var activeTabBarItemColor = 0
 
     @BindColor(R.color.inactive_tab_bar_item)
-    @JvmField var inactiveTabBarItemColor = 0
+    @JvmField
+    var inactiveTabBarItemColor = 0
 
     override fun onFinishInflate() {
         super.onFinishInflate()
         ButterKnife.bind(this)
     }
 
-    fun select(isSelected: Boolean) {
-        if (isSelected) setIconColor(activeTabBarItemColor) else setIconColor(inactiveTabBarItemColor)
-    }
+    fun select(isSelected: Boolean) =
+            if (isSelected) setIconColor(activeTabBarItemColor) else setIconColor(inactiveTabBarItemColor)
 }

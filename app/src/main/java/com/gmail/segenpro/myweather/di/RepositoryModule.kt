@@ -15,7 +15,7 @@ abstract class RepositoryModule {
 
     @Binds
     @Named("appSection")
-    abstract fun bindAppSectionRepository(appSectionDataRepository: AppSectionDataRepository): Repository<AppSection> /*MainRepository*/
+    abstract fun bindAppSectionRepository(appSectionDataRepository: AppSectionDataRepository): Repository<AppSection>
 
     @Binds
     @Named("reload")

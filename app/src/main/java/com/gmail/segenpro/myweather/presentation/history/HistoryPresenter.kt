@@ -7,9 +7,7 @@ import com.gmail.segenpro.myweather.presentation.core.BasePresenter
 @InjectViewState
 class HistoryPresenter : BasePresenter<HistoryView>() {
 
-    override fun inject(appComponent: AppComponent) {
-        appComponent.inject(this)
-    }
+    override fun inject(appComponent: AppComponent) = appComponent.inject(this)
 
     override fun onFirstViewAttach() {
         //todo логика

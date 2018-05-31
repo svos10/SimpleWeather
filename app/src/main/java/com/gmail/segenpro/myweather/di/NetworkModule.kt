@@ -30,10 +30,7 @@ private fun getKeyInterceptor() = Interceptor {
     it.proceed(newRequest)
 }
 
-private fun getLoggingInterceptor(): Interceptor {
-    val interceptor = HttpLoggingInterceptor()
-    return interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-}
+private fun getLoggingInterceptor() = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
 @Module
 class NetworkModule {

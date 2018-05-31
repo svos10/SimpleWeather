@@ -9,9 +9,7 @@ class HistoryFragment : ChildFragment(), HistoryView {
     @InjectPresenter
     lateinit var presenter: HistoryPresenter
 
-    override fun getLayoutResId(): Int {
-        return R.layout.fragment_history
-    }
+    override fun getLayoutResId() = R.layout.fragment_history
 
     companion object {
         fun newInstance() = HistoryFragment()

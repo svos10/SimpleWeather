@@ -19,9 +19,7 @@ class ForecastPresenter : ChildPresenter<ForecastView>() {
     @Inject
     lateinit var weatherInteractor: WeatherInteractor
 
-    override fun inject(appComponent: AppComponent) {
-        appComponent.inject(this)
-    }
+    override fun inject(appComponent: AppComponent) = appComponent.inject(this)
 
     override fun onFirstViewAttach() {
         showProgress(true)
