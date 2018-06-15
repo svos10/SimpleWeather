@@ -16,7 +16,7 @@ fun isNetworkAvailable(context: Context?): Boolean {
 fun getFullUrlFromProtocolRelative(protocolRelativeUrl: String): String {
     val iconUri = Uri.parse(protocolRelativeUrl)
     return Uri.Builder()
-            .scheme("https")
+            .scheme("http")
             .authority(iconUri.authority)
             .path(iconUri.path)
             .build()

@@ -33,7 +33,9 @@ class ForecastFragment : ChildFragment(), ForecastView {
         temperature.text = getString(R.string.temperature, forecast.temperatureInCelsius.toString())
         wind.text = getString(R.string.wind, forecast.windInMetersPerSecond.toString())
         description.text = forecast.description
-        GlideApp.with(this).load(getFullUrlFromProtocolRelative(forecast.icon)).into(icon)
+        GlideApp.with(this)
+                .load(getFullUrlFromProtocolRelative(forecast.icon))
+                .into(icon)
     }
 
     companion object {

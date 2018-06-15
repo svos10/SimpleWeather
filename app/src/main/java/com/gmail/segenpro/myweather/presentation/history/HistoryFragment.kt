@@ -34,8 +34,9 @@ class HistoryFragment : ChildFragment(), HistoryView {
         temperature.text = getString(R.string.temperature, historyDays[0].maxTemperatureInCelsius.toString())
         wind.text = getString(R.string.wind, historyDays[0].maxWindInMetersPerSecond.toString())
         description.text = historyDays[0].condition.text
-        //todo Glide перестал загружать картинки, разобраться
-        GlideApp.with(this).load(getFullUrlFromProtocolRelative(historyDays[0].condition.icon)).into(icon)
+        GlideApp.with(this)
+                .load(getFullUrlFromProtocolRelative(historyDays[0].condition.icon))
+                .into(icon)
     }
 
     companion object {

@@ -26,7 +26,7 @@ class HistoryPresenter : ChildPresenter<HistoryView>() {
         weatherInteractor.getCurrentLocation()//todo потом удалить
                 .firstOrError()
                 .filter { it is Result.Error }
-                .flatMapSingleElement { weatherInteractor.searchLocationsAtServer("Mos") }
+                .flatMapSingleElement { weatherInteractor.searchLocationsAtServer("Izhevsk") }
                 .filter { it is Result.Success }
                 .map { (it as Result.Success).data }
                 .flatMapObservable { Observable.fromIterable(it) }
