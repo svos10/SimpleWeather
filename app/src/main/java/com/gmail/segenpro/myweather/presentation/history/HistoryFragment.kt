@@ -1,42 +1,36 @@
 package com.gmail.segenpro.myweather.presentation.history
 
-import android.widget.ImageView
-import android.widget.TextView
+import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.view.View
 import butterknife.BindView
 import com.arellomobile.mvp.presenter.InjectPresenter
-import com.gmail.segenpro.myweather.GlideApp
+import com.gmail.segenpro.myweather.MyWeatherApp
 import com.gmail.segenpro.myweather.R
 import com.gmail.segenpro.myweather.domain.core.models.HistoryDay
 import com.gmail.segenpro.myweather.presentation.core.childfragment.ChildFragment
-import com.gmail.segenpro.myweather.presentation.utils.getFullUrlFromProtocolRelative
 
 class HistoryFragment : ChildFragment(), HistoryView {
 
-    @BindView(R.id.yesterday_temperature)
-    lateinit var temperature: TextView
-
-    @BindView(R.id.yesterday_icon)
-    lateinit var icon: ImageView
-
-    @BindView(R.id.yesterday_description)
-    lateinit var description: TextView
-
-    @BindView(R.id.yesterday_wind)
-    lateinit var wind: TextView
+    @BindView(R.id.recycler_view)
+    lateinit var recyclerView: RecyclerView
 
     @InjectPresenter
     lateinit var presenter: HistoryPresenter
 
+    val historyAdapter by lazy { HistoryAdapter(MyWeatherApp.instance) }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        recyclerView.layoutManager = LinearLayoutManager(MyWeatherApp.instance)
+        recyclerView.adapter = historyAdapter
+    }
+
     override fun getLayoutResId() = R.layout.fragment_history
 
-    override fun updateState(historyDays: List<HistoryDay>) {//todo написать полный код
-        if (historyDays.isEmpty()) return
-        temperature.text = getString(R.string.temperature, historyDays[0].maxTemperatureInCelsius.toString())
-        wind.text = getString(R.string.wind, historyDays[0].maxWindInMetersPerSecond.toString())
-        description.text = historyDays[0].condition.text
-        GlideApp.with(this)
-                .load(getFullUrlFromProtocolRelative(historyDays[0].condition.icon))
-                .into(icon)
+    override fun updateState(historyDays: List<HistoryDay>) {
+        historyAdapter.historyDays = historyDays
     }
 
     companion object {
