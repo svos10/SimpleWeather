@@ -1,9 +1,10 @@
 package com.gmail.segenpro.myweather.presentation.core.childfragment
 
-import com.gmail.segenpro.myweather.data.network.WeatherException
+import com.gmail.segenpro.myweather.data.WeatherException
 import com.gmail.segenpro.myweather.domain.AppSection
 import com.gmail.segenpro.myweather.domain.main.AppSectionInteractor
 import com.gmail.segenpro.myweather.domain.main.ReloadContentInteractor
+import com.gmail.segenpro.myweather.domain.weather.WeatherInteractor
 import com.gmail.segenpro.myweather.presentation.core.BasePresenter
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -17,6 +18,9 @@ abstract class ChildPresenter<View : ChildView> : BasePresenter<View>() {
 
     @Inject
     lateinit var reloadContentInteractor: ReloadContentInteractor
+
+    @Inject
+    lateinit var weatherInteractor: WeatherInteractor
 
     protected fun onError(weatherException: WeatherException, isShownError: Boolean) {
         weatherException.printStackTrace()

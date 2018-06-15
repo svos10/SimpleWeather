@@ -27,13 +27,23 @@
                 android:visibility="gone" />
 
             <TextView
-                android:id="@+id/error_text_view"
+                android:id="@+id/server_error_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:background="@color/background"
                 android:gravity="center"
                 android:text="@string/server_error"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/location_error_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@color/background"
+                android:gravity="center"
+                android:text="@string/location_error"
                 android:visibility="gone" />
         </FrameLayout>
 

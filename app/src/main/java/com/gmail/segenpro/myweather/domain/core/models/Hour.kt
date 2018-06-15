@@ -1,0 +1,32 @@
+package com.gmail.segenpro.myweather.domain.core.models
+
+data class Hour(
+        val timeEpoch: Int = 0,
+        val time: String = "",
+        val tempInCelsius: Float = 0f,
+        val tempInFahrenheit: Float = 0f,
+        val maxWindInMph: Float = 0f,
+        val maxWindInMetersPerSecond: Float = 0f,
+        val windDirectionInDegrees: Int = 0,
+        val windDirection: String = "",
+        val pressureInMb: Float = 0f,
+        val pressureInInches: Float = 0f,
+        val precipitationInMillimeters: Float = 0f,
+        val precipitationInInches: Float = 0f,
+        val humidityInPercentage: Int = 0,
+        val cloudInPercentage: Int = 0,
+        val feelsLikeTempInCelsius: Float = 0f,
+        val feelsLikeTempInFahrenheit: Float = 0f,
+        val windchillTempInCelsius: Float = 0f,
+        val windchillTempInFahrenheit: Float = 0f,
+        val heatIndexInCelsius: Float = 0f,
+        val heatIndexInFahrenheit: Float = 0f,
+        val dewPointInCelsius: Float = 0f,
+        val dewPointInFahrenheit: Float = 0f,
+        val willItRain: Boolean = false,
+        val willItSnow: Boolean = false,
+        val isDay: Boolean = true,
+        val visibilityInKm: Float = 0f,
+        val visibilityInMiles: Float = 0f,
+        val condition: Condition = Condition()
+)

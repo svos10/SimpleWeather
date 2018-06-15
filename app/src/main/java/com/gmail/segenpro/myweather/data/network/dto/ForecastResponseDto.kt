@@ -5,12 +5,10 @@ import com.google.gson.annotations.SerializedName
 data class ForecastResponseDto(
         @SerializedName("location") val locationDto: LocationDto?,
         @SerializedName("current") val currentDto: CurrentDto?,
-        @SerializedName("forecast") val forecastDaysDto: ForecastDaysDto?,
-        @SerializedName("error") val errorDto: ErrorDto?
+        @SerializedName("forecast") val forecastDaysDto: ForecastDaysDto?
 ) : BaseResponseDto {
 
-    override fun isValid(): Boolean = (locationDto?.isValid() ?: false
+    override fun isValid(): Boolean = locationDto?.isValid() ?: false
             && currentDto?.isValid() ?: false
-            && forecastDaysDto?.isValid() ?: false)
-            || errorDto?.isValid() ?: false
+            && forecastDaysDto?.isValid() ?: false
 }

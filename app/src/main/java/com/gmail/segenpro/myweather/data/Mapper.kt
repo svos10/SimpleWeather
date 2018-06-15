@@ -1,4 +1,4 @@
-package com.gmail.segenpro.myweather.data.network.mappers
+package com.gmail.segenpro.myweather.data
 
 interface Mapper<From, To> {
 

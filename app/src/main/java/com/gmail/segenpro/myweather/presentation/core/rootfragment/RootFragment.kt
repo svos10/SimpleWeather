@@ -10,8 +10,8 @@ import butterknife.OnClick
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.gmail.segenpro.myweather.MyWeatherApp
 import com.gmail.segenpro.myweather.R
-import com.gmail.segenpro.myweather.data.network.ErrorType
-import com.gmail.segenpro.myweather.data.network.WeatherException
+import com.gmail.segenpro.myweather.data.ErrorType
+import com.gmail.segenpro.myweather.data.WeatherException
 import com.gmail.segenpro.myweather.domain.AppSection
 import com.gmail.segenpro.myweather.presentation.core.BaseFragment
 import com.gmail.segenpro.myweather.presentation.core.navigator.Navigator
@@ -25,8 +25,11 @@ class RootFragment : BaseFragment(), RootView {
     @BindView(R.id.charts)
     lateinit var chartsButton: TabBarButton
 
-    @BindView(R.id.error_text_view)
-    lateinit var errorText: TextView
+    @BindView(R.id.server_error_text_view)
+    lateinit var serverErrorText: TextView
+
+    @BindView(R.id.location_error_text_view)
+    lateinit var locationErrorText: TextView
 
     @BindView(R.id.error_layout)
     lateinit var errorLayout: View
@@ -81,18 +84,25 @@ class RootFragment : BaseFragment(), RootView {
         when (weatherException.errorType) {
             ErrorType.NETWORK_UNAVAILABLE -> {
                 errorLayout.visibility = VISIBLE
-                errorText.visibility = GONE
+                serverErrorText.visibility = GONE
+                locationErrorText.visibility = GONE
             }
             ErrorType.SERVER_ERROR, ErrorType.SERVER_DATA_ERROR -> {
                 errorLayout.visibility = GONE
-                errorText.visibility = VISIBLE
+                serverErrorText.visibility = VISIBLE
+                locationErrorText.visibility = GONE
+            }
+            ErrorType.LOCATION_NOT_SELECTED -> {
+                errorLayout.visibility = GONE
+                serverErrorText.visibility = GONE
+                locationErrorText.visibility = VISIBLE
             }
         }
     }
 
     override fun hideError() {
         errorLayout.visibility = GONE
-        errorText.visibility = GONE
+        serverErrorText.visibility = GONE
     }
 
     override fun showProgress(isShown: Boolean) {

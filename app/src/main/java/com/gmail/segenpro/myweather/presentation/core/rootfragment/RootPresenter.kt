@@ -27,7 +27,7 @@ class RootPresenter : BasePresenter<RootView>() {
 
     override fun inject(appComponent: AppComponent) = appComponent.inject(this)
 
-    override fun onFirstViewAttach() = appSectionInteractor.observeAppSection()
+    override fun onFirstViewAttach() = appSectionInteractor.observeAppSection()//todo разобраться почему сохраняет экран после выхода
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
                 viewState.hideError()

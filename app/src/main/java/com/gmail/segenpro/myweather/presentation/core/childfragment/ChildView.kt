@@ -2,7 +2,7 @@ package com.gmail.segenpro.myweather.presentation.core.childfragment
 
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import com.gmail.segenpro.myweather.data.network.WeatherException
+import com.gmail.segenpro.myweather.data.WeatherException
 import com.gmail.segenpro.myweather.presentation.core.BaseView
 
 interface ChildView : BaseView {
