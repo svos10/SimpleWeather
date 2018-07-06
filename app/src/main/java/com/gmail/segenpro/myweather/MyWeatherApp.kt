@@ -1,6 +1,7 @@
 package com.gmail.segenpro.myweather
 
 import android.app.Application
+import android.content.Context
 import com.gmail.segenpro.myweather.di.AppComponent
 import com.gmail.segenpro.myweather.di.DaggerAppComponent
 import ru.terrakok.cicerone.Cicerone
@@ -19,9 +20,12 @@ class MyWeatherApp : Application() {
         Cicerone.create()
     }
 
-    override fun onCreate() {
-        super.onCreate()
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
         instance = this
+        // во избежание проблем с ContentProvider для сохранения instance использован метод
+        // Application.attachBaseContext() вместо Application.onCreate(), т.к последовательность
+        // вызовов следующая: Application.attachBaseContext(), ContentProvider.onCreate(), Application.onCreate()
     }
 
     companion object {

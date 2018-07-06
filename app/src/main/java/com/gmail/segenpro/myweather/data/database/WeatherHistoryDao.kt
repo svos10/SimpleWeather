@@ -1,13 +1,11 @@
 package com.gmail.segenpro.myweather.data.database
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy.REPLACE
-import android.arch.persistence.room.Query
-import android.arch.persistence.room.Transaction
+import android.arch.persistence.room.*
+import android.arch.persistence.room.OnConflictStrategy.IGNORE
 import com.gmail.segenpro.myweather.data.database.entities.*
 import com.gmail.segenpro.myweather.data.database.pojo.HistoryEntitiesWrapper
 import com.gmail.segenpro.myweather.data.database.pojo.HistoryObject
+
 
 @Dao
 abstract class WeatherHistoryDao {
@@ -27,26 +25,35 @@ abstract class WeatherHistoryDao {
     @Query("SELECT * FROM HourEntity WHERE id IN (:ids)")
     abstract fun getHourEntities(ids: List<Long>): List<HourEntity>
 
-    @Query("SELECT * FROM HistoryDayEntity WHERE location_id = :location_id ORDER BY date_epoch DESC")
-    abstract fun getHistoryObjects(location_id: Long): List<HistoryObject>
+    @Query("SELECT * FROM HistoryDayEntity WHERE location_id = :locationId ORDER BY date_epoch DESC")
+    abstract fun getHistoryObjects(locationId: Long): List<HistoryObject>
 
-    @Query("SELECT count(*) FROM HistoryDayEntity WHERE location_id = :location_id")
-    abstract fun getHistoryCount(location_id: Long): Int
+    @Query("SELECT count(*) FROM HistoryDayEntity WHERE location_id = :locationId")
+    abstract fun getHistoryCount(locationId: Long): Int
 
-    @Query("SELECT count(*) FROM HistoryDayEntity WHERE location_id = :location_id AND date_epoch = :date_epoch")
-    abstract fun getHistoryCount(location_id: Long, date_epoch: Int): Int
+    @Query("SELECT count(*) FROM HistoryDayEntity WHERE location_id = :locationId AND date_epoch = :date_epoch")
+    abstract fun getHistoryCount(locationId: Long, date_epoch: Int): Int
 
-    @Query("SELECT date FROM HistoryDayEntity WHERE location_id = :location_id ORDER BY date_epoch DESC LIMIT :daysCount")
-    abstract fun getRecentDays(location_id: Long, daysCount: Int): List<String>
+    @Query("SELECT date FROM HistoryDayEntity WHERE location_id = :locationId ORDER BY date_epoch DESC LIMIT :daysCount")
+    abstract fun getRecentDays(locationId: Long, daysCount: Int): List<String>
 
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = IGNORE)
     abstract fun insert(locationEntity: LocationEntity): Long
 
-    @Insert(onConflict = REPLACE)
-    abstract fun insert(conditionEntity: ConditionEntity)
+    @Update(onConflict = IGNORE)
+    abstract fun update(locationEntity: LocationEntity)
 
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = IGNORE)
+    abstract fun insert(conditionEntity: ConditionEntity): Long
+
+    @Update(onConflict = IGNORE)
+    abstract fun update(conditionEntity: ConditionEntity)
+
+    @Insert(onConflict = IGNORE)
     abstract fun insertConditions(conditionEntities: List<ConditionEntity>)
+
+    @Update(onConflict = IGNORE)
+    abstract fun updateConditions(conditionEntities: List<ConditionEntity>)
 
     @Insert
     abstract fun insert(historyDayEntity: HistoryDayEntity): Long
@@ -56,6 +63,29 @@ abstract class WeatherHistoryDao {
 
     @Insert
     abstract fun insertHours(hourEntities: List<HourEntity>)
+
+    @Transaction
+    open fun upsert(locationEntity: LocationEntity) {
+        val id = insert(locationEntity)
+        if (id != -1L) return
+        if (locationEntity.timeZone.isEmpty()) {
+            val timezone = getLocationEntity(locationEntity.id)?.timeZone ?: ""
+            val updatedLocationEntity = locationEntity.copy(timeZone = timezone)
+            update(updatedLocationEntity)
+        } else {
+            update(locationEntity)
+        }
+    }
+
+    private fun upsert(conditionEntity: ConditionEntity) {
+        val id = insert(conditionEntity)
+        if (id == -1L) update(conditionEntity)
+    }
+
+    private fun upsertConditions(conditionEntities: List<ConditionEntity>) {
+        insertConditions(conditionEntities)
+        updateConditions(conditionEntities)
+    }
 
     @Query("UPDATE LocationEntity SET latitude = :latitudeInDegrees, longitude = :longitudeInDegrees, time_zone = :timeZone WHERE id = :locationId")
     abstract fun updateLocationById(locationId: Long, latitudeInDegrees: Float, longitudeInDegrees: Float,
@@ -72,6 +102,9 @@ abstract class WeatherHistoryDao {
         return getHistoryObjects(locationId)
     }
 
+    @Query("SELECT count(*) FROM HistoryDayEntity")
+    abstract fun getHistoryCount(): Int
+
     @Transaction
     open fun insertHistoryDay(historyEntitiesWrapper: HistoryEntitiesWrapper) {
         val locationEntity = historyEntitiesWrapper.locationEntity
@@ -86,8 +119,8 @@ abstract class WeatherHistoryDao {
                     locationEntity.timeZone)
         }
 
-        insert(historyEntitiesWrapper.dayConditionEntity)
-        insertConditions(historyEntitiesWrapper.hourConditionEntities)
+        upsert(historyEntitiesWrapper.dayConditionEntity)
+        upsertConditions(historyEntitiesWrapper.hourConditionEntities)
         val historyId = insert(historyEntitiesWrapper.historyDayEntity.copy(locationId = locationId))
         insert(historyEntitiesWrapper.astroEntity.copy(historyId = historyId))
         val newHourEntities = ArrayList<HourEntity>().apply {

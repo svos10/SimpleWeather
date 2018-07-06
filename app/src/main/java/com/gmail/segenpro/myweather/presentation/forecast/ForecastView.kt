@@ -8,5 +8,8 @@ import com.gmail.segenpro.myweather.presentation.core.childfragment.ChildView
 interface ForecastView : ChildView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
+    fun updateLocation(locationName: String)
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
     fun updateState(forecast: Forecast)
 }

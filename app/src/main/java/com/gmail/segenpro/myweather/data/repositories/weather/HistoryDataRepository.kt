@@ -48,7 +48,9 @@ class HistoryDataRepository @Inject constructor(private val dtoToHistoryDaysMapp
             }
 
     override fun getHistoryFromDb(location: Location): Single<List<HistoryDay>> =
-            weatherHistoryDao.getHistory(locationToLocationEntityMapper.map(location)).toObservable()
-                    .map { objectToHistoryDayMapper.map(it) }
-                    .toList()
+            Single.defer {
+                weatherHistoryDao.getHistory(locationToLocationEntityMapper.map(location)).toObservable()
+                        .map { objectToHistoryDayMapper.map(it) }
+                        .toList()
+            }
 }

@@ -7,6 +7,7 @@ import com.gmail.segenpro.myweather.data.WeatherException
 import com.gmail.segenpro.myweather.data.network.Result
 import com.gmail.segenpro.myweather.domain.CURRENT_LOCATION_NOT_SET
 import com.gmail.segenpro.myweather.domain.Repository
+import com.gmail.segenpro.myweather.domain.core.models.Forecast
 import com.gmail.segenpro.myweather.domain.core.models.HistoryDay
 import com.gmail.segenpro.myweather.domain.core.models.Location
 import com.gmail.segenpro.myweather.domain.core.models.SearchLocation
@@ -43,7 +44,7 @@ class WeatherInteractor @Inject constructor(private val forecastRepository: Fore
     @field:Named("currentLocation")
     lateinit var currentLocationRepository: Repository<Long>
 
-    private fun getHistoryFromServerAndCache(location: Location, daysCount: Int) = (1..daysCount).toObservable()
+    private fun getHistoryFromServerAndCache(location: Location, daysCount: Int): Completable = (1..daysCount).toObservable()
             .flatMapSingle { historyRepository.getHistoryFromServer(location.name, getDaysAgo(it)) }
             .flatMapCompletable { historyDayResult ->
                 when (historyDayResult) {
@@ -64,29 +65,23 @@ class WeatherInteractor @Inject constructor(private val forecastRepository: Fore
             }
 
     fun setCurrentLocation(searchLocation: SearchLocation): Completable =
-            currentLocationRepository.setAndObserveSingle(searchLocation.id)
-                    .flatMapCompletable { forecastRepository.putLocationToDb(searchLocation) }
+            getCurrentLocation()
+                    .flatMapCompletable {
+                        if (it is Result.Error || (it as Result.Success).data.id != searchLocation.id) {
+                            forecastRepository.putLocationToDb(searchLocation)
+                                    .andThen(currentLocationRepository.setAndObserveSingle(searchLocation.id).toCompletable())
+                        } else Completable.complete()
+                    }
 
     fun searchLocationsAtServer(locationName: String): Single<Result<List<SearchLocation>>> =
             forecastRepository.searchLocationsAtServer(locationName)
 
-    fun getForecast() = getCurrentLocation()
-            .flatMapSingle {
-                when (it) {
-                    is Result.Success -> forecastRepository.getForecast(it.data.name, FORECAST_DAYS)
+    fun getForecast(locationName: String): Single<Result<Forecast>> =
+            forecastRepository.getForecast(locationName, FORECAST_DAYS)
 
-                    is Result.Error -> Single.just(it.weatherException.asErrorResult())
-                }
-            }
-
-    fun getHistory(): Observable<Result<List<HistoryDay>>> = getCurrentLocation()
-            .flatMapSingle { locationResult ->
-                when (locationResult) {
-                    is Result.Success ->
-                        getHistoryFromServerAndCache(locationResult.data, HISTORY_DAYS_COUNT)
-                                .andThen(historyRepository.getHistoryFromDb(locationResult.data)
-                                        .map { it.asResult() })
-                    is Result.Error -> Single.just(locationResult.weatherException.asErrorResult())
-                }
-            }
+    fun getHistory(location: Location): Single<Result<List<HistoryDay>>> =
+            getHistoryFromServerAndCache(location, HISTORY_DAYS_COUNT)
+                    .andThen(historyRepository.getHistoryFromDb(location)
+                            .map { it.asResult() }
+                    )
 }

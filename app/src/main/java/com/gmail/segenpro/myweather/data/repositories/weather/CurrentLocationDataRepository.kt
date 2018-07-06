@@ -12,6 +12,7 @@ private const val KEY_LOCATION = "key_location"
 @Singleton
 class LocationDataRepository @Inject constructor(rxSharedPreferences: RxSharedPreferences) :
         SharedPreferencesRepository<Long>(rxSharedPreferences) {
+
     override fun getPreference(rxSharedPreferences: RxSharedPreferences): Preference<Long> =
             rxSharedPreferences.getLong(KEY_LOCATION)
 

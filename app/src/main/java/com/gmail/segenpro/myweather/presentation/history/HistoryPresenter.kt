@@ -1,11 +1,14 @@
 package com.gmail.segenpro.myweather.presentation.history
 
-import android.util.Log
 import com.arellomobile.mvp.InjectViewState
+import com.gmail.segenpro.myweather.asErrorResult
 import com.gmail.segenpro.myweather.data.network.Result
 import com.gmail.segenpro.myweather.di.AppComponent
+import com.gmail.segenpro.myweather.domain.core.models.HistoryDay
+import com.gmail.segenpro.myweather.domain.core.models.Location
 import com.gmail.segenpro.myweather.presentation.core.childfragment.ChildPresenter
-import io.reactivex.Observable
+import com.gmail.segenpro.myweather.showError
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -15,50 +18,48 @@ class HistoryPresenter : ChildPresenter<HistoryView>() {
     override fun inject(appComponent: AppComponent) = appComponent.inject(this)
 
     override fun onFirstViewAttach() {
+        showContent(false)
         getHistory()
-
-        /*weatherInteractor.getCurrentLocation()
-                .subscribeOn(Schedulers.io())
-                .subscribe({ Log.d("semLog", javaClass.simpleName + "@" + hashCode() + ", getCurrentLocation(), subscribe(), onSuccess(), thread = ${Thread.currentThread().id}, result = $it") },
-                        { Log.e("semLog", javaClass.simpleName + "@" + hashCode() + ", getCurrentLocation(), subscribe(), onError(), thread = ${Thread.currentThread().id}", it) })
-                .unsubscribeOnDestroy()*/
-
-        weatherInteractor.getCurrentLocation()//todo потом удалить
-                .firstOrError()
-                .filter { it is Result.Error }
-                .flatMapSingleElement { weatherInteractor.searchLocationsAtServer("Izhevsk") }
-                .filter { it is Result.Success }
-                .map { (it as Result.Success).data }
-                .flatMapObservable { Observable.fromIterable(it) }
-                .firstElement()
-                .flatMapCompletable { weatherInteractor.setCurrentLocation(it) }
-                .subscribeOn(Schedulers.io())
-                .subscribe({ Log.d("semLog", javaClass.simpleName + "@" + hashCode() + ", setCurrentLocation(), subscribe(), onSuccess(), thread = ${Thread.currentThread().id}") },
-                        { Log.e("semLog", javaClass.simpleName + "@" + hashCode() + ", setCurrentLocation(), subscribe(), onError(), thread = ${Thread.currentThread().id}", it) })
-                .unsubscribeOnDestroy()
     }
 
     private fun getHistory() {
-        showProgress(true)
-        weatherInteractor.getHistory()
-                .map { result ->
-                    if (result is Result.Error) {
-                        result.copy(isShown = true)
-                    } else {
-                        result
-                    }
-                }
-                .subscribeOn(Schedulers.io())
+        weatherInteractor.getCurrentLocation()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext {
-                    showProgress(false)
+                    hideError()
+                    showProgress(true)
+                    if (it is Result.Success) viewState.updateLocation(it.data.name)
+
                 }
-                .subscribe({ history ->
+                .observeOn(Schedulers.io())
+                .flatMapSingle {
+                    when (it) {
+                        is Result.Success -> getHistoryOnce(it.data)
+                        is Result.Error -> Single.just(it.weatherException.asErrorResult<List<HistoryDay>>().showError())
+                    }
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnEach { showProgress(false) }
+                .subscribe { history ->
                     when (history) {
-                        is Result.Success -> viewState.updateState(history.data)
+                        is Result.Success -> {
+                            hideError()
+                            viewState.updateState(history.data)
+                        }
                         is Result.Error -> onError(history.weatherException, history.isShown)
                     }
-                })
+                    showContent(true)
+                }
                 .unsubscribeOnDestroy()
     }
+
+    private fun getHistoryOnce(location: Location): Single<Result<List<HistoryDay>>> =
+            weatherInteractor.getHistory(location)
+                    .map { result ->
+                        if (result is Result.Error) {
+                            result.showError()
+                        } else {
+                            result
+                        }
+                    }
 }

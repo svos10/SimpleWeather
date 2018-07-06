@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.widget.TextView
 import butterknife.BindView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.gmail.segenpro.myweather.MyWeatherApp
@@ -13,13 +14,16 @@ import com.gmail.segenpro.myweather.presentation.core.childfragment.ChildFragmen
 
 class HistoryFragment : ChildFragment(), HistoryView {
 
+    @BindView(R.id.location)
+    lateinit var location: TextView
+
     @BindView(R.id.recycler_view)
     lateinit var recyclerView: RecyclerView
 
     @InjectPresenter
     lateinit var presenter: HistoryPresenter
 
-    val historyAdapter by lazy { HistoryAdapter(MyWeatherApp.instance) }
+    private val historyAdapter by lazy { HistoryAdapter(MyWeatherApp.instance) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -28,6 +32,10 @@ class HistoryFragment : ChildFragment(), HistoryView {
     }
 
     override fun getLayoutResId() = R.layout.fragment_history
+
+    override fun updateLocation(locationName: String) {
+        location.text = locationName
+    }
 
     override fun updateState(historyDays: List<HistoryDay>) {
         historyAdapter.historyDays = historyDays

@@ -12,7 +12,7 @@ class DtoToSearchLocationMapper @Inject constructor() : Mapper<SearchLocationDto
     override fun map(from: SearchLocationDto): SearchLocation =
     // утверждения !! здесь допустимы, т.к. проверка уже сделана ранее вызовом функции-расширения retrofitResponseToResult()
             SearchLocation(from.id!!,
-                    from.name!!,
+                    from.name!!.substringBefore(","),
                     from.region!!,
                     from.country!!,
                     from.latitudeInDegrees!!,

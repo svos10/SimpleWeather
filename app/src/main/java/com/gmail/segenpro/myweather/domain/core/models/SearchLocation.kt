@@ -1,5 +1,7 @@
 package com.gmail.segenpro.myweather.domain.core.models
 
+import java.io.Serializable
+
 data class SearchLocation(
         val id: Long,
         val name: String,
@@ -8,4 +10,4 @@ data class SearchLocation(
         val latitudeInDegrees: Float,
         val longitudeInDegrees: Float,
         val url: String
-)
+) : Serializable

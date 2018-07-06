@@ -1,6 +1,7 @@
 package com.gmail.segenpro.myweather.presentation.core
 
 import android.os.Bundle
+import android.support.annotation.CallSuper
 import android.support.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ abstract class BaseFragment : MvpAppCompatFragment(), BaseView {
     @LayoutRes
     protected abstract fun getLayoutResId(): Int
 
+    @CallSuper
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(getLayoutResId(), container, false)

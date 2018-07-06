@@ -6,6 +6,7 @@
     <string name="two_days_ago">Two days ago</string>
     <string name="three_days_ago">Three days ago</string>
     <string name="try_again">Try again</string>
+    <string name="search_location">Search location</string>
 
     <!-- errors -->
     <string name="no_connection">Connection not available</string>

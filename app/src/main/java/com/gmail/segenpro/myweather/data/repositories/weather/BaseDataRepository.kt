@@ -11,6 +11,7 @@ import com.gmail.segenpro.myweather.data.database.entities.LocationEntity
 import com.gmail.segenpro.myweather.data.network.Result
 import com.gmail.segenpro.myweather.data.network.WeatherService
 import com.gmail.segenpro.myweather.data.network.dto.SearchLocationDto
+import com.gmail.segenpro.myweather.data.network.dto.SearchLocationsResponseDto
 import com.gmail.segenpro.myweather.data.retrofitResponseToResult
 import com.gmail.segenpro.myweather.domain.core.models.Location
 import com.gmail.segenpro.myweather.domain.core.models.SearchLocation
@@ -54,17 +55,18 @@ abstract class BaseDataRepository : BaseRepository {
 
     override fun putLocationToDb(searchLocation: SearchLocation): Completable =
             Completable.fromAction {
-                weatherHistoryDao.insert(searchLocationToLocationEntityMapper.map(searchLocation))
+                weatherHistoryDao.upsert(searchLocationToLocationEntityMapper.map(searchLocation))
             }
 
     override fun searchLocationsAtServer(locationName: String): Single<Result<List<SearchLocation>>> =
             weatherService.searchLocation(locationName)
+                    .map { SearchLocationsResponseDto(it) }
                     .retrofitResponseToResult(context, gson)
                     .map {
                         when (it) {
-                            is Result.Success -> it.data
+                            is Result.Success -> it.data.searchLocationsDto
                                     .map { dtoToSearchLocationMapper.map(it) }
-                                    .filter { it.name.startsWith(locationName) }
+                                    .filter { it.name.startsWith(locationName, true) }
                                     .asResult()
 
                             is Result.Error -> it.weatherException.asErrorResult()

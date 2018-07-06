@@ -12,6 +12,9 @@ import com.gmail.segenpro.myweather.presentation.utils.getFullUrlFromProtocolRel
 
 class ForecastFragment : ChildFragment(), ForecastView {
 
+    @BindView(R.id.location)
+    lateinit var location: TextView
+
     @BindView(R.id.temperature)
     lateinit var temperature: TextView
 
@@ -28,6 +31,10 @@ class ForecastFragment : ChildFragment(), ForecastView {
     lateinit var presenter: ForecastPresenter
 
     override fun getLayoutResId() = R.layout.fragment_forecast
+
+    override fun updateLocation(locationName: String) {
+        location.text = locationName
+    }
 
     override fun updateState(forecast: Forecast) {
         temperature.text = getString(R.string.temperature, forecast.temperatureInCelsius.toString())

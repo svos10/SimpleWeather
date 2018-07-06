@@ -31,6 +31,9 @@ class RootFragment : BaseFragment(), RootView {
     @BindView(R.id.location_error_text_view)
     lateinit var locationErrorText: TextView
 
+    @BindView(R.id.content_container)
+    lateinit var contentContainer: View
+
     @BindView(R.id.error_layout)
     lateinit var errorLayout: View
 
@@ -71,10 +74,14 @@ class RootFragment : BaseFragment(), RootView {
             }
 
     @OnClick(R.id.forecast)
-    fun onForecastClick() = presenter.openForecast()
+    fun onForecastClick() {
+        presenter.openForecast()
+    }
 
     @OnClick(R.id.charts)
-    fun onChartsClick() = presenter.openCharts()
+    fun onChartsClick() {
+        presenter.openCharts()
+    }
 
     @OnClick(R.id.try_again)
     fun onTryAgainClick() = presenter.onTryAgainClicked()
@@ -103,9 +110,14 @@ class RootFragment : BaseFragment(), RootView {
     override fun hideError() {
         errorLayout.visibility = GONE
         serverErrorText.visibility = GONE
+        locationErrorText.visibility = GONE
     }
 
     override fun showProgress(isShown: Boolean) {
         progress.visibility = if (isShown) VISIBLE else GONE
+    }
+
+    override fun showContent(isShown: Boolean) {
+        contentContainer.visibility = if (isShown) VISIBLE else GONE
     }
 }

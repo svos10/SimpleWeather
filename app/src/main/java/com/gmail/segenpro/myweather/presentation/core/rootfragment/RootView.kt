@@ -16,4 +16,7 @@ interface RootView : BaseView {
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showProgress(isShown: Boolean)
+
+    @StateStrategyType(OneExecutionStateStrategy::class)
+    fun showContent(isShown: Boolean)
 }

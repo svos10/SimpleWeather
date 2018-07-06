@@ -17,4 +17,8 @@ abstract class ChildFragment : BaseFragment(), ChildView {
     final override fun showProgress(isShown: Boolean) {
         (parentFragment as? RootFragment)?.showProgress(isShown)
     }
+
+    override fun showContent(isShown: Boolean) {
+        (parentFragment as? RootFragment)?.showContent(isShown)
+    }
 }
