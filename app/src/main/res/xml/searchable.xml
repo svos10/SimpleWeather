@@ -3,6 +3,6 @@
     android:hint="@string/search_location"
     android:imeOptions="actionNone"
     android:label="@string/app_name"
-    android:searchSuggestAuthority="com.gmail.segenpro.myweather.presentation.location"
+    android:searchSuggestAuthority="com.gmail.segenpro.simpleweather.presentation.location"
     android:searchSuggestIntentAction="android.intent.action.VIEW"
     android:searchSuggestSelection="" />

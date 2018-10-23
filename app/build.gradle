@@ -11,7 +11,7 @@ repositories {
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.gmail.segenpro.myweather"
+        applicationId "com.gmail.segenpro.simpleweather"
         minSdkVersion 19
         targetSdkVersion 27
         versionCode 1

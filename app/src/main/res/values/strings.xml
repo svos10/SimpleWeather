@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Weather</string>
+    <string name="app_name">Simple Weather</string>
     <string name="temperature">Temperature %1$s \u00B0C</string>
     <string name="wind">Wind: %1$s m/s</string>
     <string name="yesterday">Yesterday</string>

@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/root_fragment"
-        android:name="com.gmail.segenpro.myweather.presentation.core.rootfragment.RootFragment"
+        android:name="com.gmail.segenpro.simpleweather.presentation.core.rootfragment.RootFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

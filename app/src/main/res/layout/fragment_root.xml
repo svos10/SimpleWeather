@@ -33,7 +33,7 @@
         android:layout_height="@dimen/tab_bar_item_size"
         android:orientation="horizontal">
 
-        <com.gmail.segenpro.myweather.presentation.core.widgets.TabBarButton
+        <com.gmail.segenpro.simpleweather.presentation.core.widgets.TabBarButton
             android:id="@+id/forecast"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -42,7 +42,7 @@
             app:weatherIconResource="@string/wi_cloud"
             app:weatherIconSize="25" />
 
-        <com.gmail.segenpro.myweather.presentation.core.widgets.TabBarButton
+        <com.gmail.segenpro.simpleweather.presentation.core.widgets.TabBarButton
             android:id="@+id/history"
             android:layout_width="0dp"
             android:layout_height="match_parent"
