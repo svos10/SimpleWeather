@@ -1,7 +1,7 @@
 package com.gmail.segenpro.myweather.domain.main
 
 import com.gmail.segenpro.myweather.domain.AppSection
-import com.gmail.segenpro.myweather.domain.Repository
+import com.gmail.segenpro.myweather.domain.core.Repository
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton

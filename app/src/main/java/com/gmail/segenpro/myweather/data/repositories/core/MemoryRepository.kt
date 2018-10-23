@@ -1,6 +1,6 @@
 package com.gmail.segenpro.myweather.data.repositories.core
 
-import com.gmail.segenpro.myweather.domain.Repository
+import com.gmail.segenpro.myweather.domain.core.Repository
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject

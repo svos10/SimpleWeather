@@ -1,4 +1,4 @@
-package com.gmail.segenpro.myweather.domain
+package com.gmail.segenpro.myweather.domain.core
 
 import io.reactivex.Observable
 import io.reactivex.Single

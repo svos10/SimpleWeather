@@ -4,11 +4,13 @@ import com.gmail.segenpro.myweather.data.repositories.main.AppSectionDataReposit
 import com.gmail.segenpro.myweather.data.repositories.main.ReloadContentDataRepository
 import com.gmail.segenpro.myweather.data.repositories.weather.ForecastDataRepository
 import com.gmail.segenpro.myweather.data.repositories.weather.HistoryDataRepository
-import com.gmail.segenpro.myweather.data.repositories.weather.LocationDataRepository
+import com.gmail.segenpro.myweather.data.repositories.location.CurrentLocationIdDataRepository
+import com.gmail.segenpro.myweather.data.repositories.location.LocationDataRepository
 import com.gmail.segenpro.myweather.domain.AppSection
-import com.gmail.segenpro.myweather.domain.Repository
-import com.gmail.segenpro.myweather.domain.weather.ForecastRepository
-import com.gmail.segenpro.myweather.domain.weather.HistoryRepository
+import com.gmail.segenpro.myweather.domain.core.Repository
+import com.gmail.segenpro.myweather.domain.ForecastRepository
+import com.gmail.segenpro.myweather.domain.HistoryRepository
+import com.gmail.segenpro.myweather.domain.LocationRepository
 import dagger.Binds
 import dagger.Module
 import javax.inject.Named
@@ -25,8 +27,11 @@ abstract class RepositoryModule {
     abstract fun bindReloadContentRepository(reloadContentDataRepository: ReloadContentDataRepository): Repository<AppSection>
 
     @Binds
-    @Named("currentLocation")
-    abstract fun bindCurrentLocationRepository(currentLocationDataRepository: LocationDataRepository): Repository<Long>
+    @Named("currentLocationId")
+    abstract fun bindCurrentLocationIdRepository(currentLocationIdDataRepository: CurrentLocationIdDataRepository): Repository<Long>
+
+    @Binds
+    abstract fun bindLocationRepository(locationDataRepository: LocationDataRepository): LocationRepository
 
     @Binds
     abstract fun bindForecastRepository(forecastDataRepository: ForecastDataRepository): ForecastRepository

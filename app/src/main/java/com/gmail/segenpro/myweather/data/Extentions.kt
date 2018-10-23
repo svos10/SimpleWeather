@@ -13,6 +13,10 @@ import retrofit2.HttpException
 import java.io.IOException
 import kotlin.math.round
 
+private const val METERS_IN_KILOMETER = 1000
+private const val SECONDS_IN_HOUR = 3600
+private const val FIRST_FRACTIONAL_DIGIT_FACTOR = 10
+
 fun <T : BaseDto> Single<T>.retrofitResponseToResult(context: Context, gson: Gson): Single<Result<T>> {
     return this
             .map {
@@ -24,6 +28,8 @@ fun <T : BaseDto> Single<T>.retrofitResponseToResult(context: Context, gson: Gso
                 }
             }
             .onErrorReturn {
+                //выбранная архитектура обрабатывает только ожидаемые исключения,
+                //см. https://rongi.github.io/kotlin-blog/rxjava/rx/2017/08/01/error-handling-in-rxjava.html
                 return@onErrorReturn when (it) {
                     is IOException -> WeatherException(ErrorType.NETWORK_UNAVAILABLE).asErrorResult()
                     is HttpException -> {
@@ -39,14 +45,14 @@ fun <T : BaseDto> Single<T>.retrofitResponseToResult(context: Context, gson: Gso
 
                         weatherException.asErrorResult()
                     }
-                    else -> throw it //todo решить, что лучше: всё перехватывать через WeatherException(ErrorType.APP_ERROR).asErrorResult(), либо throw it
+                    else -> throw it
                 }
             }
 }
 
-fun Float.kilometersPerHourToMetersPerSecond() = this * 1000 / 3600
+fun Float.kilometersPerHourToMetersPerSecond() = this * METERS_IN_KILOMETER / SECONDS_IN_HOUR
 
-fun Float.roundingToOneDecimalPlace() = round(this * 10) / 10
+fun Float.roundingToOneDecimalPlace() = round(this * FIRST_FRACTIONAL_DIGIT_FACTOR) / FIRST_FRACTIONAL_DIGIT_FACTOR
 
 fun <T : BaseDto> List<T>?.isDtoListValid(): Boolean {
     this?.forEach {

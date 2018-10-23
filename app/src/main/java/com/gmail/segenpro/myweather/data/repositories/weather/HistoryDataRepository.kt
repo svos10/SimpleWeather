@@ -8,11 +8,12 @@ import com.gmail.segenpro.myweather.data.database.pojo.HistoryEntitiesWrapper
 import com.gmail.segenpro.myweather.data.database.pojo.HistoryObject
 import com.gmail.segenpro.myweather.data.network.Result
 import com.gmail.segenpro.myweather.data.network.dto.HistoryResponseDto
+import com.gmail.segenpro.myweather.data.repositories.BaseDataRepository
 import com.gmail.segenpro.myweather.data.retrofitResponseToResult
 import com.gmail.segenpro.myweather.domain.core.models.HistoryDay
 import com.gmail.segenpro.myweather.domain.core.models.HistoryDays
 import com.gmail.segenpro.myweather.domain.core.models.Location
-import com.gmail.segenpro.myweather.domain.weather.HistoryRepository
+import com.gmail.segenpro.myweather.domain.HistoryRepository
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable

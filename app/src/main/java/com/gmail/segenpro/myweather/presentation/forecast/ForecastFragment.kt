@@ -1,19 +1,22 @@
 package com.gmail.segenpro.myweather.presentation.forecast
 
+import android.view.View
+import android.view.View.VISIBLE
 import android.widget.ImageView
 import android.widget.TextView
 import butterknife.BindView
+import butterknife.OnClick
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.gmail.segenpro.myweather.GlideApp
 import com.gmail.segenpro.myweather.R
 import com.gmail.segenpro.myweather.domain.core.models.Forecast
-import com.gmail.segenpro.myweather.presentation.core.childfragment.ChildFragment
+import com.gmail.segenpro.myweather.presentation.core.basecontentfragment.BaseContentFragment
 import com.gmail.segenpro.myweather.presentation.utils.getFullUrlFromProtocolRelative
 
-class ForecastFragment : ChildFragment(), ForecastView {
+class ForecastFragment : BaseContentFragment(), ForecastView {
 
-    @BindView(R.id.location)
-    lateinit var location: TextView
+    @BindView(R.id.info)
+    lateinit var info: View
 
     @BindView(R.id.temperature)
     lateinit var temperature: TextView
@@ -32,11 +35,11 @@ class ForecastFragment : ChildFragment(), ForecastView {
 
     override fun getLayoutResId() = R.layout.fragment_forecast
 
-    override fun updateLocation(locationName: String) {
-        location.text = locationName
-    }
+    @OnClick(R.id.try_again)
+    fun onTryAgainClick() = presenter.onTryAgainClicked()
 
     override fun updateState(forecast: Forecast) {
+        info.visibility = VISIBLE
         temperature.text = getString(R.string.temperature, forecast.temperatureInCelsius.toString())
         wind.text = getString(R.string.wind, forecast.windInMetersPerSecond.toString())
         description.text = forecast.description

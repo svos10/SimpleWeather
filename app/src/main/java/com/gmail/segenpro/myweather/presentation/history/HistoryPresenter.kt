@@ -6,30 +6,27 @@ import com.gmail.segenpro.myweather.data.network.Result
 import com.gmail.segenpro.myweather.di.AppComponent
 import com.gmail.segenpro.myweather.domain.core.models.HistoryDay
 import com.gmail.segenpro.myweather.domain.core.models.Location
-import com.gmail.segenpro.myweather.presentation.core.childfragment.ChildPresenter
+import com.gmail.segenpro.myweather.presentation.core.basecontentfragment.BaseContentPresenter
 import com.gmail.segenpro.myweather.showError
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 @InjectViewState
-class HistoryPresenter : ChildPresenter<HistoryView>() {
+class HistoryPresenter : BaseContentPresenter<HistoryView>() {
 
     override fun inject(appComponent: AppComponent) = appComponent.inject(this)
 
     override fun onFirstViewAttach() {
-        showContent(false)
         getHistory()
     }
 
     private fun getHistory() {
-        weatherInteractor.getCurrentLocation()
+        locationInteractor.getCurrentLocation()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext {
                     hideError()
                     showProgress(true)
-                    if (it is Result.Success) viewState.updateLocation(it.data.name)
-
                 }
                 .observeOn(Schedulers.io())
                 .flatMapSingle {
@@ -40,16 +37,7 @@ class HistoryPresenter : ChildPresenter<HistoryView>() {
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnEach { showProgress(false) }
-                .subscribe { history ->
-                    when (history) {
-                        is Result.Success -> {
-                            hideError()
-                            viewState.updateState(history.data)
-                        }
-                        is Result.Error -> onError(history.weatherException, history.isShown)
-                    }
-                    showContent(true)
-                }
+                .subscribe({ onGetHistoryResult(it) }, { onError(it) })
                 .unsubscribeOnDestroy()
     }
 
@@ -62,4 +50,14 @@ class HistoryPresenter : ChildPresenter<HistoryView>() {
                             result
                         }
                     }
+
+    private fun onGetHistoryResult(result: Result<List<HistoryDay>>) {
+        when (result) {
+            is Result.Success -> {
+                hideError()
+                viewState.updateState(result.data)
+            }
+            is Result.Error -> onError(result.weatherException, result.isShown)
+        }
+    }
 }

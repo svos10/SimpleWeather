@@ -4,33 +4,33 @@ import com.arellomobile.mvp.InjectViewState
 import com.gmail.segenpro.myweather.asErrorResult
 import com.gmail.segenpro.myweather.data.network.Result
 import com.gmail.segenpro.myweather.di.AppComponent
+import com.gmail.segenpro.myweather.domain.AppSection
 import com.gmail.segenpro.myweather.domain.core.models.Forecast
+import com.gmail.segenpro.myweather.presentation.core.basecontentfragment.BaseContentPresenter
 import com.gmail.segenpro.myweather.showError
-import com.gmail.segenpro.myweather.presentation.core.childfragment.ChildPresenter
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 private const val FORECAST_INTERVAL_IN_MINUTES = 10L
 
 @InjectViewState
-class ForecastPresenter : ChildPresenter<ForecastView>() {
+class ForecastPresenter : BaseContentPresenter<ForecastView>() {
 
     override fun inject(appComponent: AppComponent) = appComponent.inject(this)
 
     override fun onFirstViewAttach() {
-        showContent(false)
         getForecast()
     }
 
     private fun getForecast() {
-        weatherInteractor.getCurrentLocation()
+        locationInteractor.getCurrentLocation()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext {
                     hideError()
                     showProgress(true)
-                    if (it is Result.Success) viewState.updateLocation(it.data.name)
                 }
                 .flatMap {
                     when (it) {
@@ -40,16 +40,7 @@ class ForecastPresenter : ChildPresenter<ForecastView>() {
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnEach { showProgress(false) }
-                .subscribe {
-                    when (it) {
-                        is Result.Success -> {
-                            hideError()
-                            viewState.updateState(it.data)
-                        }
-                        is Result.Error -> onError(it.weatherException, it.isShown)
-                    }
-                    showContent(true)
-                }
+                .subscribe({ onGetForecastResult(it) }, { onError(it) })
                 .unsubscribeOnDestroy()
     }
 
@@ -76,4 +67,23 @@ class ForecastPresenter : ChildPresenter<ForecastView>() {
                         showProgress(true)
                     }
     )
+
+    private fun observeReloadContentRequest(): Observable<Long> =
+            reloadContentInteractor.observeReloadContentRequest()
+                    .withLatestFrom(appSectionInteractor.observeAppSection()
+                    ) { reloadedSection: AppSection, currentSection: AppSection ->
+                        reloadedSection == currentSection
+                    }
+                    .filter { it }
+                    .map { -1L }
+
+    private fun onGetForecastResult(result: Result<Forecast>) {
+        when (result) {
+            is Result.Success -> {
+                hideError()
+                viewState.updateState(result.data)
+            }
+            is Result.Error -> onError(result.weatherException, result.isShown)
+        }
+    }
 }

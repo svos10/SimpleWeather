@@ -9,14 +9,14 @@ import android.net.Uri
 import android.provider.BaseColumns._ID
 import com.gmail.segenpro.myweather.MyWeatherApp
 import com.gmail.segenpro.myweather.data.network.Result
-import com.gmail.segenpro.myweather.domain.weather.WeatherInteractor
+import com.gmail.segenpro.myweather.domain.location.LocationInteractor
 import com.google.gson.Gson
 import javax.inject.Inject
 
 class SuggestionsProvider : ContentProvider() {
 
     @Inject
-    lateinit var weatherInteractor: WeatherInteractor//todo убирать фокус после выбора пункта
+    lateinit var locationInteractor: LocationInteractor
 
     @Inject
     lateinit var gson: Gson
@@ -33,12 +33,12 @@ class SuggestionsProvider : ContentProvider() {
         if (selectionArgs == null || selectionArgs.isEmpty() || selectionArgs[0].isBlank()) return locationsCursor
 
         //запрос query производится системой в рабочем потоке, поэтому можно использовать Rx blockingGet()
-        val locationsResult = weatherInteractor.searchLocationsAtServer(selectionArgs[0]).blockingGet()
+        val locationsResult = locationInteractor.searchLocationsAtServer(selectionArgs[0]).blockingGet()
         if (locationsResult is Result.Error) return locationsCursor
 
         val locations = (locationsResult as Result.Success).data
         locations.forEach {
-            locationsCursor.addRow(listOf(it.id, it.name, it.country +", "+ it.region, gson.toJson(it)))
+            locationsCursor.addRow(listOf(it.id, it.name, it.country + ", " + it.region, gson.toJson(it)))
         }
         return locationsCursor
     }

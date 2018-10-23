@@ -2,7 +2,7 @@ package com.gmail.segenpro.myweather.data.repositories.core
 
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
-import com.gmail.segenpro.myweather.domain.Repository
+import com.gmail.segenpro.myweather.domain.core.Repository
 import io.reactivex.Observable
 import io.reactivex.Single
 

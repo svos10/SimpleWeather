@@ -21,9 +21,9 @@ class MainPresenter : BasePresenter<MainView>() {
 
     fun setLocation(searchLocationString: String) {
         if (!locationDisposable.isDisposed) locationDisposable.dispose()
-        locationDisposable = weatherInteractor.setCurrentLocation(gson.fromJson(searchLocationString, SearchLocation::class.java))
+        locationDisposable = locationInteractor.setCurrentLocation(gson.fromJson(searchLocationString, SearchLocation::class.java))
                 .subscribeOn(Schedulers.io())
-                .subscribe()
+                .subscribe({}, { onError(it) })
                 .unsubscribeOnDestroy()
     }
 }

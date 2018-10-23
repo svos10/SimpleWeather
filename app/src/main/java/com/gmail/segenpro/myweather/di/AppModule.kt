@@ -9,6 +9,7 @@ import com.gmail.segenpro.myweather.MyWeatherApp
 import com.gmail.segenpro.myweather.data.database.WeatherHistoryDatabase
 import dagger.Module
 import dagger.Provides
+import ru.terrakok.cicerone.Router
 import javax.inject.Singleton
 
 private val DATABASE_NAME = WeatherHistoryDatabase::class.java.simpleName
@@ -18,11 +19,11 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideContext(myWeatherApp: MyWeatherApp) = myWeatherApp.applicationContext
+    fun provideContext(myWeatherApp: MyWeatherApp): Context = myWeatherApp.applicationContext
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(context: Context) =
+    fun provideSharedPreferences(context: Context): SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(context)
 
     @Provides
@@ -32,7 +33,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideRouter(myWeatherApp: MyWeatherApp) = myWeatherApp.cicerone.router
+    fun provideRouter(myWeatherApp: MyWeatherApp): Router = myWeatherApp.cicerone.router
 
     @Provides
     @Singleton

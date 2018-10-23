@@ -4,7 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="10dp">
+    android:paddingBottom="10dp">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/delimiter_width"
+        android:background="@color/delimiter" />
 
     <TextView
         android:id="@+id/date"
@@ -13,10 +18,4 @@
         tools:text="15.06.2018" />
 
     <include layout="@layout/item_weather" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/delimiter_width"
-        android:layout_marginTop="5dp"
-        android:background="@color/delimiter" />
 </LinearLayout>

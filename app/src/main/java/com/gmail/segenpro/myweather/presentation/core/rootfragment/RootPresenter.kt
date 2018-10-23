@@ -1,55 +1,61 @@
 package com.gmail.segenpro.myweather.presentation.core.rootfragment
 
 import com.arellomobile.mvp.InjectViewState
+import com.gmail.segenpro.myweather.data.network.Result
 import com.gmail.segenpro.myweather.di.AppComponent
 import com.gmail.segenpro.myweather.domain.AppSection
 import com.gmail.segenpro.myweather.presentation.core.BasePresenter
-import com.gmail.segenpro.myweather.presentation.utils.isNetworkAvailable
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import ru.terrakok.cicerone.Router
+import javax.inject.Inject
 
 @InjectViewState
 class RootPresenter : BasePresenter<RootView>() {
+
+    @Inject
+    lateinit var router: Router
 
     override fun inject(appComponent: AppComponent) = appComponent.inject(this)
 
     override fun onFirstViewAttach() {
         appSectionInteractor.observeAppSection()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext {
-                    viewState.hideError()
-                    viewState.showProgress(false)
-                }
                 .subscribe({
                     viewState.selectAppSection(it)
                     router.replaceScreen(it.name)
-                })
+                }, { onError(it) })
+                .unsubscribeOnDestroy()
+
+        showCurrentLocation()
+    }
+
+    private fun showCurrentLocation() {
+        locationInteractor.getCurrentLocation()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    val name = (it as? Result.Success)?.data?.name ?: ""
+                    viewState.showLocationName(name)
+                }, { onError(it) })
                 .unsubscribeOnDestroy()
     }
 
     fun openForecast() = open(AppSection.FORECAST)
 
-    fun openCharts() = open(AppSection.CHARTS)
-
-    fun onTryAgainClicked() {
-        if (!isNetworkAvailable(context)) return
-
-        appSectionInteractor.observeAppSectionOnce()
-                .flatMapCompletable { reloadContentInteractor.requestReloadContent(it).toCompletable() }
-                .subscribe()
-                .unsubscribeOnDestroy()
-    }
+    fun openHistory() = open(AppSection.HISTORY)
 
     private fun open(appSection: AppSection) = appSectionInteractor.observeAppSectionOnce()
             .flatMapCompletable {
                 if (it != appSection) {
-                    appSectionInteractor.setAppSection(appSection).toCompletable()
+                    appSectionInteractor.setAppSection(appSection).ignoreElement()
                 } else {
                     Completable.complete()
                 }
             }
             .subscribeOn(Schedulers.io())
-            .subscribe()
+            .subscribe({}, { onError(it) })
             .unsubscribeOnDestroy()
 }

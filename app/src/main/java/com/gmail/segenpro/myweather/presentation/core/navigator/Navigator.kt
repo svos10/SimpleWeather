@@ -16,9 +16,9 @@ class Navigator(fragmentManager: FragmentManager, @IdRes containerId: Int) :
     var onExitListener: OnExitListener? = null
 
     override fun createFragment(screenKey: String?, data: Any?): Fragment? = screenKey?.let {
-        when (screenKey) {
+        when (it) {
             AppSection.FORECAST.name -> ForecastFragment.newInstance()
-            AppSection.CHARTS.name -> HistoryFragment.newInstance()
+            AppSection.HISTORY.name -> HistoryFragment.newInstance()
             else -> null
         }
     }

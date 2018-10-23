@@ -1,4 +1,4 @@
-package com.gmail.segenpro.myweather.domain.weather
+package com.gmail.segenpro.myweather.domain
 
 import com.gmail.segenpro.myweather.data.network.Result
 import com.gmail.segenpro.myweather.domain.core.models.HistoryDay
@@ -6,7 +6,7 @@ import com.gmail.segenpro.myweather.domain.core.models.Location
 import io.reactivex.Completable
 import io.reactivex.Single
 
-interface HistoryRepository: BaseRepository {
+interface HistoryRepository {
 
     fun getHistoryFromServer(locationName: String, historyDate: String): Single<Result<HistoryDay>>
 

@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/city_bottom_margin"
-        android:textSize="@dimen/city_text_size"
-        tools:text="Location" />
+    <include
+        android:id="@+id/info"
+        layout="@layout/item_weather"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
-    <include layout="@layout/item_weather" />
-    <!--todo добавить время последнего обновления-->
-</LinearLayout>
+    <include
+        android:id="@+id/progress_layout"
+        layout="@layout/layout_progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/errors_layout"
+        layout="@layout/layout_error"
+        android:visibility="gone" />
+</FrameLayout>

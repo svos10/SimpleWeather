@@ -4,18 +4,15 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import android.widget.TextView
 import butterknife.BindView
+import butterknife.OnClick
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.gmail.segenpro.myweather.MyWeatherApp
 import com.gmail.segenpro.myweather.R
 import com.gmail.segenpro.myweather.domain.core.models.HistoryDay
-import com.gmail.segenpro.myweather.presentation.core.childfragment.ChildFragment
+import com.gmail.segenpro.myweather.presentation.core.basecontentfragment.BaseContentFragment
 
-class HistoryFragment : ChildFragment(), HistoryView {
-
-    @BindView(R.id.location)
-    lateinit var location: TextView
+class HistoryFragment : BaseContentFragment(), HistoryView {
 
     @BindView(R.id.recycler_view)
     lateinit var recyclerView: RecyclerView
@@ -33,9 +30,8 @@ class HistoryFragment : ChildFragment(), HistoryView {
 
     override fun getLayoutResId() = R.layout.fragment_history
 
-    override fun updateLocation(locationName: String) {
-        location.text = locationName
-    }
+    @OnClick(R.id.try_again)
+    fun onTryAgainClick() = presenter.onTryAgainClicked()
 
     override fun updateState(historyDays: List<HistoryDay>) {
         historyAdapter.historyDays = historyDays

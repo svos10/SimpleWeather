@@ -5,9 +5,10 @@ import com.gmail.segenpro.myweather.asResult
 import com.gmail.segenpro.myweather.data.Mapper
 import com.gmail.segenpro.myweather.data.network.Result
 import com.gmail.segenpro.myweather.data.network.dto.ForecastResponseDto
+import com.gmail.segenpro.myweather.data.repositories.BaseDataRepository
 import com.gmail.segenpro.myweather.data.retrofitResponseToResult
 import com.gmail.segenpro.myweather.domain.core.models.Forecast
-import com.gmail.segenpro.myweather.domain.weather.ForecastRepository
+import com.gmail.segenpro.myweather.domain.ForecastRepository
 import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
