@@ -2,8 +2,9 @@ package com.gmail.segenpro.simpleweather.presentation.core.rootfragment
 
 import com.arellomobile.mvp.InjectViewState
 import com.gmail.segenpro.simpleweather.data.network.Result
-import com.gmail.segenpro.simpleweather.di.AppComponent
 import com.gmail.segenpro.simpleweather.domain.AppSection
+import com.gmail.segenpro.simpleweather.domain.location.LocationInteractor
+import com.gmail.segenpro.simpleweather.domain.main.AppSectionInteractor
 import com.gmail.segenpro.simpleweather.presentation.core.BasePresenter
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -12,14 +13,16 @@ import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
 @InjectViewState
-class RootPresenter : BasePresenter<RootView>() {
-
-    @Inject
-    lateinit var router: Router
-
-    override fun inject(appComponent: AppComponent) = appComponent.inject(this)
+class RootPresenter @Inject constructor(private val locationInteractor: LocationInteractor,
+                                        private val appSectionInteractor: AppSectionInteractor,
+                                        private val router: Router) : BasePresenter<RootView>() {
 
     override fun onFirstViewAttach() {
+        observeAppSection()
+        showCurrentLocation()
+    }
+
+    private fun observeAppSection() {
         appSectionInteractor.observeAppSection()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -28,8 +31,6 @@ class RootPresenter : BasePresenter<RootView>() {
                     router.replaceScreen(it.name)
                 }, { onError(it) })
                 .unsubscribeOnDestroy()
-
-        showCurrentLocation()
     }
 
     private fun showCurrentLocation() {

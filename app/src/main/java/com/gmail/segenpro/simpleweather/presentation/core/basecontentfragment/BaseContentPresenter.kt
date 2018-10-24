@@ -2,18 +2,15 @@ package com.gmail.segenpro.simpleweather.presentation.core.basecontentfragment
 
 import android.content.Context
 import com.gmail.segenpro.simpleweather.data.WeatherException
-import com.gmail.segenpro.simpleweather.domain.weather.WeatherInteractor
+import com.gmail.segenpro.simpleweather.domain.main.AppSectionInteractor
+import com.gmail.segenpro.simpleweather.domain.main.ReloadContentInteractor
 import com.gmail.segenpro.simpleweather.presentation.core.BasePresenter
 import com.gmail.segenpro.simpleweather.presentation.utils.isNetworkAvailable
-import javax.inject.Inject
 
-abstract class BaseContentPresenter<View : BaseContentView> : BasePresenter<View>() {
-
-    @Inject
-    lateinit var context: Context
-
-    @Inject
-    protected lateinit var weatherInteractor: WeatherInteractor
+abstract class BaseContentPresenter<View : BaseContentView>(private val context: Context,
+                                                            private val appSectionInteractor: AppSectionInteractor,
+                                                            private val reloadContentInteractor: ReloadContentInteractor) :
+        BasePresenter<View>() {
 
     protected fun showProgress(isShown: Boolean) = viewState.showProgress(isShown)
 

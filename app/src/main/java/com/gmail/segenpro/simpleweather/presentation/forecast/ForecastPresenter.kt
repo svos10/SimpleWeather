@@ -1,11 +1,15 @@
 package com.gmail.segenpro.simpleweather.presentation.forecast
 
+import android.content.Context
 import com.arellomobile.mvp.InjectViewState
 import com.gmail.segenpro.simpleweather.asErrorResult
 import com.gmail.segenpro.simpleweather.data.network.Result
-import com.gmail.segenpro.simpleweather.di.AppComponent
 import com.gmail.segenpro.simpleweather.domain.AppSection
 import com.gmail.segenpro.simpleweather.domain.core.models.Forecast
+import com.gmail.segenpro.simpleweather.domain.location.LocationInteractor
+import com.gmail.segenpro.simpleweather.domain.main.AppSectionInteractor
+import com.gmail.segenpro.simpleweather.domain.main.ReloadContentInteractor
+import com.gmail.segenpro.simpleweather.domain.weather.WeatherInteractor
 import com.gmail.segenpro.simpleweather.presentation.core.basecontentfragment.BaseContentPresenter
 import com.gmail.segenpro.simpleweather.showError
 import io.reactivex.Observable
@@ -13,13 +17,17 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 private const val FORECAST_INTERVAL_IN_MINUTES = 10L
 
 @InjectViewState
-class ForecastPresenter : BaseContentPresenter<ForecastView>() {
-
-    override fun inject(appComponent: AppComponent) = appComponent.inject(this)
+class ForecastPresenter @Inject constructor(context: Context,
+                                            private val appSectionInteractor: AppSectionInteractor,
+                                            private val reloadContentInteractor: ReloadContentInteractor,
+                                            private val locationInteractor: LocationInteractor,
+                                            private val weatherInteractor: WeatherInteractor) :
+        BaseContentPresenter<ForecastView>(context, appSectionInteractor, reloadContentInteractor) {
 
     override fun onFirstViewAttach() {
         getForecast()

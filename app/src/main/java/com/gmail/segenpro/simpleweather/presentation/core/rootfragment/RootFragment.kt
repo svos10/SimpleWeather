@@ -7,12 +7,16 @@ import android.widget.TextView
 import butterknife.BindView
 import butterknife.OnClick
 import com.arellomobile.mvp.presenter.InjectPresenter
-import com.gmail.segenpro.simpleweather.SimpleWeatherApp
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.gmail.segenpro.simpleweather.R
+import com.gmail.segenpro.simpleweather.SimpleWeatherApp
+import com.gmail.segenpro.simpleweather.di.AppComponent
 import com.gmail.segenpro.simpleweather.domain.AppSection
 import com.gmail.segenpro.simpleweather.presentation.core.BaseFragment
 import com.gmail.segenpro.simpleweather.presentation.core.navigator.Navigator
 import com.gmail.segenpro.simpleweather.presentation.core.widgets.TabBarButton
+import javax.inject.Inject
+import javax.inject.Provider
 
 class RootFragment : BaseFragment(), RootView {
 
@@ -33,10 +37,20 @@ class RootFragment : BaseFragment(), RootView {
         Navigator(childFragmentManager, R.id.content_container)
     }
 
+    @Inject
+    lateinit var presenterProvider: Provider<RootPresenter>
+
     @InjectPresenter
     lateinit var presenter: RootPresenter
 
+    @ProvidePresenter
+    fun providePresenter(): RootPresenter = presenterProvider.get()
+
     override fun getLayoutResId() = R.layout.fragment_root
+
+    override fun inject(component: AppComponent) {
+        component.inject(this)
+    }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)

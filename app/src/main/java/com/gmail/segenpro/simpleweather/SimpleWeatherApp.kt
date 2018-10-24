@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.gmail.segenpro.simpleweather.di.AppComponent
 import com.gmail.segenpro.simpleweather.di.DaggerAppComponent
+import com.squareup.leakcanary.LeakCanary
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.Router
 
@@ -26,6 +27,14 @@ class SimpleWeatherApp : Application() {
         // во избежание проблем с ContentProvider для сохранения instance использован метод
         // Application.attachBaseContext() вместо Application.onCreate(), т.к последовательность
         // вызовов следующая: Application.attachBaseContext(), ContentProvider.onCreate(), Application.onCreate()
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return
+        }
+        LeakCanary.install(this)
     }
 
     companion object {

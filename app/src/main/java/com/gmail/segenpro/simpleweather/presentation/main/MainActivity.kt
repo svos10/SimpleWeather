@@ -8,19 +8,31 @@ import android.support.v7.widget.SearchView
 import android.view.Menu
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.gmail.segenpro.simpleweather.R
+import com.gmail.segenpro.simpleweather.SimpleWeatherApp
 import com.gmail.segenpro.simpleweather.presentation.core.navigator.Navigator
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
+import javax.inject.Provider
 
 class MainActivity : MvpAppCompatActivity(), Navigator.OnExitListener, MainView {
+
+    private lateinit var searchView: SearchView
+
+    @Inject
+    lateinit var presenterProvider: Provider<MainPresenter>
 
     @InjectPresenter
     lateinit var presenter: MainPresenter
 
-    lateinit var searchView: SearchView
+    @ProvidePresenter
+    fun providePresenter(): MainPresenter = presenterProvider.get()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        SimpleWeatherApp.instance.component.inject(this)
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -42,9 +54,13 @@ class MainActivity : MvpAppCompatActivity(), Navigator.OnExitListener, MainView 
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        if (intent?.action == Intent.ACTION_VIEW && intent.extras?.containsKey(SearchManager.EXTRA_DATA_KEY) == true) {
-            presenter.setLocation(intent.extras.getSerializable(SearchManager.EXTRA_DATA_KEY) as String)
-            searchViewClearFocus()
+        if (intent?.action == Intent.ACTION_VIEW) {
+            intent.extras?.let {
+                if (it.containsKey(SearchManager.EXTRA_DATA_KEY)) {
+                    presenter.setLocation(it.getSerializable(SearchManager.EXTRA_DATA_KEY) as String)
+                    searchViewClearFocus()
+                }
+            }
         }
     }
 

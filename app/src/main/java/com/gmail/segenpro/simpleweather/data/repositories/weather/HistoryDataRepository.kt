@@ -1,19 +1,22 @@
 package com.gmail.segenpro.simpleweather.data.repositories.weather
 
+import android.content.Context
 import com.gmail.segenpro.simpleweather.asErrorResult
 import com.gmail.segenpro.simpleweather.asResult
 import com.gmail.segenpro.simpleweather.data.Mapper
+import com.gmail.segenpro.simpleweather.data.database.WeatherHistoryDao
 import com.gmail.segenpro.simpleweather.data.database.entities.LocationEntity
 import com.gmail.segenpro.simpleweather.data.database.pojo.HistoryEntitiesWrapper
 import com.gmail.segenpro.simpleweather.data.database.pojo.HistoryObject
 import com.gmail.segenpro.simpleweather.data.network.Result
+import com.gmail.segenpro.simpleweather.data.network.WeatherService
 import com.gmail.segenpro.simpleweather.data.network.dto.HistoryResponseDto
-import com.gmail.segenpro.simpleweather.data.repositories.BaseDataRepository
 import com.gmail.segenpro.simpleweather.data.retrofitResponseToResult
+import com.gmail.segenpro.simpleweather.domain.HistoryRepository
 import com.gmail.segenpro.simpleweather.domain.core.models.HistoryDay
 import com.gmail.segenpro.simpleweather.domain.core.models.HistoryDays
 import com.gmail.segenpro.simpleweather.domain.core.models.Location
-import com.gmail.segenpro.simpleweather.domain.HistoryRepository
+import com.google.gson.Gson
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
@@ -21,11 +24,15 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class HistoryDataRepository @Inject constructor(private val dtoToHistoryDaysMapper: Mapper<HistoryResponseDto, HistoryDays>,
+class HistoryDataRepository @Inject constructor(private val context: Context,
+                                                private val gson: Gson,
+                                                private val weatherService: WeatherService,
+                                                private val weatherHistoryDao: WeatherHistoryDao,
+                                                private val dtoToHistoryDaysMapper: Mapper<HistoryResponseDto, HistoryDays>,
                                                 private val modelToHistoryEntitiesWrapperMapper: Mapper<HistoryDay, HistoryEntitiesWrapper>,
                                                 private val objectToHistoryDayMapper: Mapper<HistoryObject, HistoryDay>,
                                                 private val locationToLocationEntityMapper: Mapper<Location, LocationEntity>) :
-        BaseDataRepository(), HistoryRepository {
+        HistoryRepository {
 
     override fun getHistoryFromServer(locationName: String, historyDate: String): Single<Result<HistoryDay>> =
             weatherService.getHistory(locationName, historyDate)

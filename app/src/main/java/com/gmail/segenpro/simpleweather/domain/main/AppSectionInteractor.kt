@@ -7,11 +7,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class AppSectionInteractor @Inject constructor() {
-
-    @Inject
-    @field:Named("appSection")
-    lateinit var appSectionRepository: Repository<AppSection>
+class AppSectionInteractor @Inject constructor(@Named("appSection") private val appSectionRepository: Repository<AppSection>) {
 
     fun observeAppSection() = appSectionRepository.observe()
 

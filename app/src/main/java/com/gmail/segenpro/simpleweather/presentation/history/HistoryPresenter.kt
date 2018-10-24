@@ -1,21 +1,29 @@
 package com.gmail.segenpro.simpleweather.presentation.history
 
+import android.content.Context
 import com.arellomobile.mvp.InjectViewState
 import com.gmail.segenpro.simpleweather.asErrorResult
 import com.gmail.segenpro.simpleweather.data.network.Result
-import com.gmail.segenpro.simpleweather.di.AppComponent
 import com.gmail.segenpro.simpleweather.domain.core.models.HistoryDay
 import com.gmail.segenpro.simpleweather.domain.core.models.Location
+import com.gmail.segenpro.simpleweather.domain.location.LocationInteractor
+import com.gmail.segenpro.simpleweather.domain.main.AppSectionInteractor
+import com.gmail.segenpro.simpleweather.domain.main.ReloadContentInteractor
+import com.gmail.segenpro.simpleweather.domain.weather.WeatherInteractor
 import com.gmail.segenpro.simpleweather.presentation.core.basecontentfragment.BaseContentPresenter
 import com.gmail.segenpro.simpleweather.showError
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 @InjectViewState
-class HistoryPresenter : BaseContentPresenter<HistoryView>() {
-
-    override fun inject(appComponent: AppComponent) = appComponent.inject(this)
+class HistoryPresenter @Inject constructor(context: Context,
+                                           appSectionInteractor: AppSectionInteractor,
+                                           reloadContentInteractor: ReloadContentInteractor,
+                                           private val locationInteractor: LocationInteractor,
+                                           private val weatherInteractor: WeatherInteractor) :
+        BaseContentPresenter<HistoryView>(context, appSectionInteractor, reloadContentInteractor) {
 
     override fun onFirstViewAttach() {
         getHistory()

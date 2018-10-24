@@ -5,10 +5,10 @@ import com.gmail.segenpro.simpleweather.data.ErrorType
 import com.gmail.segenpro.simpleweather.data.WeatherException
 import com.gmail.segenpro.simpleweather.data.network.Result
 import com.gmail.segenpro.simpleweather.domain.CURRENT_LOCATION_ID_NOT_SET
+import com.gmail.segenpro.simpleweather.domain.LocationRepository
 import com.gmail.segenpro.simpleweather.domain.core.Repository
 import com.gmail.segenpro.simpleweather.domain.core.models.Location
 import com.gmail.segenpro.simpleweather.domain.core.models.SearchLocation
-import com.gmail.segenpro.simpleweather.domain.LocationRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -17,11 +17,8 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class LocationInteractor @Inject constructor(private val locationRepository: LocationRepository) {
-
-    @Inject
-    @field:Named("currentLocationId")
-    lateinit var currentLocationIdRepository: Repository<Long>
+class LocationInteractor @Inject constructor(private val locationRepository: LocationRepository,
+                                             @Named("currentLocationId") private val currentLocationIdRepository: Repository<Long>) {
 
     fun getCurrentLocation(): Observable<Result<Location>> = currentLocationIdRepository.observe()
             .flatMapSingle {

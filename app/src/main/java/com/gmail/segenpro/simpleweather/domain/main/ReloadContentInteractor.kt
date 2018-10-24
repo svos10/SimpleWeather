@@ -7,11 +7,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class ReloadContentInteractor @Inject constructor() {
-
-    @Inject
-    @field:Named("reload")
-    lateinit var reloadContentRepository: Repository<AppSection>
+class ReloadContentInteractor @Inject constructor(@Named("reload") private val reloadContentRepository: Repository<AppSection>) {
 
     fun observeReloadContentRequest() = reloadContentRepository.observe()
 
