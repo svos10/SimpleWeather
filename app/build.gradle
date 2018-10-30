@@ -23,13 +23,24 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
+            useProguard false
+            versionNameSuffix = "-debug"
             buildConfigField "String", "APIXU_API_KEY", rootProject.ext.apixuApiKey
         }
+
         release {
             minifyEnabled true
-            useProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            useProguard true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'proguard-retrofit2.pro'
             buildConfigField "String", "APIXU_API_KEY", rootProject.ext.apixuApiKey
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def date = new Date()
+            def formattedDate = date.format('dd.MM.yyyy')
+            outputFileName = "SimpleWeather-${formattedDate}-v${defaultConfig.versionName}-${buildType.name}.apk"
         }
     }
 }
