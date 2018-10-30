@@ -29,7 +29,7 @@ class RootPresenter @Inject constructor(private val locationInteractor: Location
                 .subscribe({
                     viewState.selectTabBarButton(it)
                     router.replaceScreen(it.name)
-                }, { onError(it) })
+                }, { onUnexpectedError(it) })
                 .unsubscribeOnDestroy()
     }
 
@@ -40,7 +40,7 @@ class RootPresenter @Inject constructor(private val locationInteractor: Location
                 .subscribe({
                     val name = (it as? Result.Success)?.data?.name ?: ""
                     viewState.showLocationName(name)
-                }, { onError(it) })
+                }, { onUnexpectedError(it) })
                 .unsubscribeOnDestroy()
     }
 
@@ -58,6 +58,6 @@ class RootPresenter @Inject constructor(private val locationInteractor: Location
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({}, { onError(it) })
+            .subscribe({}, { onUnexpectedError(it) })
             .unsubscribeOnDestroy()
 }

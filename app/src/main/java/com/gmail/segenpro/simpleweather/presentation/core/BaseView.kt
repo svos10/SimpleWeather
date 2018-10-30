@@ -7,5 +7,5 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 interface BaseView : MvpView {
 
     @StateStrategyType(OneExecutionStateStrategy::class)
-    fun onError()
+    fun onUnexpectedError()
 }

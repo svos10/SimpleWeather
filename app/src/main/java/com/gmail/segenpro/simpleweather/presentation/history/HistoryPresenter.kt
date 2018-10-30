@@ -31,12 +31,18 @@ class HistoryPresenter @Inject constructor(context: Context,
     }
 
     private fun getLocation() {
-        showProgress(true)
-        hideError()
         locationInteractor.getCurrentLocation()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnError { showProgress(false) }
+                .doOnEach {
+                    when {
+                        it.isOnNext -> {
+                            showProgress(true)
+                            hideError()
+                        }
+                        else -> showProgress(false)
+                    }
+                }
                 .subscribe({
                     when (it) {
                         is Result.Success -> {
@@ -45,7 +51,7 @@ class HistoryPresenter @Inject constructor(context: Context,
                         }
                         is Result.Error -> onError(it.weatherException, true)
                     }
-                }, { onError(it) })
+                }, { onUnexpectedError(it) })
                 .unsubscribeOnDestroy()
     }
 
@@ -58,7 +64,7 @@ class HistoryPresenter @Inject constructor(context: Context,
                 .doOnError { showProgress(false) }
                 .subscribe({
                     getHistoryOnce(location)
-                }, { onError(it) })
+                }, { onUnexpectedError(it) })
                 .unsubscribeOnDestroy()
     }
 
@@ -67,7 +73,7 @@ class HistoryPresenter @Inject constructor(context: Context,
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnEvent { _, _ -> showProgress(false) }
-                    .subscribe({ onGetHistoryResult(it) }, { onError(it) })
+                    .subscribe({ onGetHistoryResult(it) }, { onUnexpectedError(it) })
                     .unsubscribeOnDestroy()
 
     private fun onGetHistoryResult(result: Result<List<HistoryDay>>) {

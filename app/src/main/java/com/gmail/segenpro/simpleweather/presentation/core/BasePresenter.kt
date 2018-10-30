@@ -8,9 +8,9 @@ abstract class BasePresenter<View : BaseView> : MvpPresenter<View>() {
 
     private val compositeDisposable by lazy { CompositeDisposable() }
 
-    protected fun onError(throwable: Throwable) {
+    protected fun onUnexpectedError(throwable: Throwable) {
         throwable.printStackTrace()
-        viewState.onError()
+        viewState.onUnexpectedError()
     }
 
     protected fun Disposable.unsubscribeOnDestroy(): Disposable = apply {

@@ -75,7 +75,7 @@ class MainActivity : MvpAppCompatActivity(), Navigator.OnExitListener, MainView 
         setQuery("", false)
     }
 
-    override fun onError() {
-        Toast.makeText(this, getString(R.string.unexpected_error), Toast.LENGTH_LONG).show()
+    override fun onUnexpectedError() {
+        Toast.makeText(this, getString(R.string.unexpected_error), Toast.LENGTH_SHORT).show()
     }
 }

@@ -45,7 +45,7 @@ abstract class BaseFragment : MvpAppCompatFragment(), BaseView {
         refWatcher.watch(this)
     }
 
-    override fun onError() {
-        Toast.makeText(context, getString(R.string.unexpected_error), Toast.LENGTH_LONG).show()
+    override fun onUnexpectedError() {
+        Toast.makeText(context, getString(R.string.unexpected_error), Toast.LENGTH_SHORT).show()
     }
 }

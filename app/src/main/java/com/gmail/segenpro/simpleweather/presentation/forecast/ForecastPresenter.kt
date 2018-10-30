@@ -34,18 +34,25 @@ class ForecastPresenter @Inject constructor(context: Context,
     }
 
     private fun getLocation() {
-        showProgress(true)
-        hideError()
         locationInteractor.getCurrentLocation()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnError { showProgress(false) }
+                .doOnEach {
+                    when {
+                        it.isOnNext -> {
+                            showProgress(true)
+                            hideError()
+                        }
+                        else -> showProgress(false)
+                    }
+                }
                 .subscribe({
                     when (it) {
                         is Result.Success -> startForecastTimer(it.data.name)
                         is Result.Error -> onError(it.weatherException, true)
                     }
-                }, { onError(it) })
+                }, { onUnexpectedError(it)
+                })
                 .unsubscribeOnDestroy()
     }
 
@@ -60,7 +67,8 @@ class ForecastPresenter @Inject constructor(context: Context,
                 .doOnError { showProgress(false) }
                 .subscribe({
                     getForecastOnce(locationName, it == 0L)
-                }, { onError(it) })
+                }, { onUnexpectedError(it)
+                })
                 .unsubscribeOnDestroy()
     }
 
@@ -69,7 +77,8 @@ class ForecastPresenter @Inject constructor(context: Context,
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnEvent { _, _ -> showProgress(false) }
-                    .subscribe({ onGetForecastResult(it, isFirstResult) }, { onError(it) })
+                    .subscribe({ onGetForecastResult(it, isFirstResult) }, { onUnexpectedError(it)
+                    })
                     .unsubscribeOnDestroy()
 
     private fun onGetForecastResult(result: Result<Forecast>, isFirstResult: Boolean) {

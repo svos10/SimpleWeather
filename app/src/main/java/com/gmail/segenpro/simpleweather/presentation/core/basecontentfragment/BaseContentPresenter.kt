@@ -27,7 +27,6 @@ abstract class BaseContentPresenter<View : BaseContentView>(private val context:
     protected fun showProgress(isShown: Boolean) = viewState.showProgress(isShown)
 
     protected fun onError(weatherException: WeatherException, isShown: Boolean) {
-        super.onError(weatherException)
         if (isShown) {
             viewState.showError(weatherException)
         }
@@ -40,7 +39,7 @@ abstract class BaseContentPresenter<View : BaseContentView>(private val context:
 
         appSectionInteractor.observeAppSectionOnce()
                 .flatMapCompletable { reloadContentInteractor.requestReloadContent(it).ignoreElement() }
-                .subscribe({}, { onError(it) })
+                .subscribe({}, { onUnexpectedError(it) })
                 .unsubscribeOnDestroy()
     }
 }

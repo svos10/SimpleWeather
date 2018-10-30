@@ -21,7 +21,7 @@ class MainPresenter @Inject constructor(private val gson: Gson,
         locationDisposable = locationInteractor.setCurrentLocation(gson.fromJson(searchLocationString, SearchLocation::class.java))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({}, { onError(it) })
+                .subscribe({}, { onUnexpectedError(it) })
                 .unsubscribeOnDestroy()
     }
 }
