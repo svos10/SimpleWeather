@@ -33,7 +33,7 @@ class SuggestionsProvider : ContentProvider() {
         if (selectionArgs == null || selectionArgs.isEmpty() || selectionArgs[0].isBlank()) return locationsCursor
 
         //запрос query производится системой в рабочем потоке, поэтому можно использовать Rx blockingGet()
-        val locationsResult = locationInteractor.searchLocationsAtServer(selectionArgs[0]).blockingGet()
+        val locationsResult = locationInteractor.searchLocationsOnServer(selectionArgs[0]).blockingGet()
         if (locationsResult is Result.Error) return locationsCursor
 
         val locations = (locationsResult as Result.Success).data

@@ -11,5 +11,5 @@ interface RootView : BaseView {
     fun showLocationName(name: String)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun selectAppSection(appSection: AppSection)
+    fun selectTabBarButton(appSection: AppSection)
 }

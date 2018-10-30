@@ -45,6 +45,7 @@ fun <T : BaseDto> Single<T>.retrofitResponseToResult(context: Context, gson: Gso
 
                         weatherException.asErrorResult()
                     }
+                    //при корректно работающей программе сюда не попадаем
                     else -> throw it
                 }
             }

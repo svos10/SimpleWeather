@@ -91,5 +91,8 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    ext.mockitoVersion = '2.23.0'
+    testImplementation "org.mockito:mockito-inline:$mockitoVersion"
+    androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
 }

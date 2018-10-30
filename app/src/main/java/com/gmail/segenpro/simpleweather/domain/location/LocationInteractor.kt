@@ -38,6 +38,6 @@ class LocationInteractor @Inject constructor(private val locationRepository: Loc
                         } else Completable.complete()
                     }
 
-    fun searchLocationsAtServer(locationName: String): Single<Result<List<SearchLocation>>> =
-            locationRepository.searchLocationsAtServer(locationName)
+    fun searchLocationsOnServer(locationName: String): Single<Result<List<SearchLocation>>> =
+            locationRepository.searchLocationsOnServer(locationName)
 }

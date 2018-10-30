@@ -27,7 +27,7 @@ class RootPresenter @Inject constructor(private val locationInteractor: Location
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    viewState.selectAppSection(it)
+                    viewState.selectTabBarButton(it)
                     router.replaceScreen(it.name)
                 }, { onError(it) })
                 .unsubscribeOnDestroy()

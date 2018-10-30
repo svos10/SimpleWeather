@@ -46,7 +46,7 @@ class LocationDataRepository @Inject constructor(private val context: Context,
                 weatherHistoryDao.upsert(searchLocationToLocationEntityMapper.map(searchLocation))
             }
 
-    override fun searchLocationsAtServer(locationName: String): Single<Result<List<SearchLocation>>> =
+    override fun searchLocationsOnServer(locationName: String): Single<Result<List<SearchLocation>>> =
             weatherService.searchLocation(locationName)
                     .map { SearchLocationsResponseDto(it) }
                     .retrofitResponseToResult(context, gson)

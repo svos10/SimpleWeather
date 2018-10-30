@@ -86,7 +86,7 @@ class RootFragment : BaseFragment(), RootView {
         }
     }
 
-    override fun selectAppSection(appSection: AppSection) =
+    override fun selectTabBarButton(appSection: AppSection) =
             (0 until tabBarButtons.size).forEach {
                 tabBarButtons[it].select(appSection.ordinal == it)
             }

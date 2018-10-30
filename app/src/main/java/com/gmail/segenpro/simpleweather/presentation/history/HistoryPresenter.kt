@@ -2,7 +2,6 @@ package com.gmail.segenpro.simpleweather.presentation.history
 
 import android.content.Context
 import com.arellomobile.mvp.InjectViewState
-import com.gmail.segenpro.simpleweather.asErrorResult
 import com.gmail.segenpro.simpleweather.data.network.Result
 import com.gmail.segenpro.simpleweather.domain.core.models.HistoryDay
 import com.gmail.segenpro.simpleweather.domain.core.models.Location
@@ -11,9 +10,9 @@ import com.gmail.segenpro.simpleweather.domain.main.AppSectionInteractor
 import com.gmail.segenpro.simpleweather.domain.main.ReloadContentInteractor
 import com.gmail.segenpro.simpleweather.domain.weather.WeatherInteractor
 import com.gmail.segenpro.simpleweather.presentation.core.basecontentfragment.BaseContentPresenter
-import com.gmail.segenpro.simpleweather.showError
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.Disposables
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -25,39 +24,51 @@ class HistoryPresenter @Inject constructor(context: Context,
                                            private val weatherInteractor: WeatherInteractor) :
         BaseContentPresenter<HistoryView>(context, appSectionInteractor, reloadContentInteractor) {
 
+    private var historyReloadDisposable: Disposable = Disposables.empty()
+
     override fun onFirstViewAttach() {
-        getHistory()
+        getLocation()
     }
 
-    private fun getHistory() {
+    private fun getLocation() {
+        showProgress(true)
+        hideError()
         locationInteractor.getCurrentLocation()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext {
-                    hideError()
-                    showProgress(true)
-                }
-                .observeOn(Schedulers.io())
-                .flatMapSingle {
+                .doOnError { showProgress(false) }
+                .subscribe({
                     when (it) {
-                        is Result.Success -> getHistoryOnce(it.data)
-                        is Result.Error -> Single.just(it.weatherException.asErrorResult<List<HistoryDay>>().showError())
+                        is Result.Success -> {
+                            getHistoryOnce(it.data)
+                            historyReload(it.data)
+                        }
+                        is Result.Error -> onError(it.weatherException, true)
                     }
-                }
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnEach { showProgress(false) }
-                .subscribe({ onGetHistoryResult(it) }, { onError(it) })
+                }, { onError(it) })
                 .unsubscribeOnDestroy()
     }
 
-    private fun getHistoryOnce(location: Location): Single<Result<List<HistoryDay>>> =
+    private fun historyReload(location: Location) {
+        historyReloadDisposable.dispose()
+
+        historyReloadDisposable = observeReloadContentRequest()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError { showProgress(false) }
+                .subscribe({
+                    getHistoryOnce(location)
+                }, { onError(it) })
+                .unsubscribeOnDestroy()
+    }
+
+    private fun getHistoryOnce(location: Location) =
             weatherInteractor.getHistory(location)
-                    .map { result ->
-                        if (result is Result.Error) {
-                            result.showError()
-                        } else {
-                            result
-                        }
-                    }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnEvent { _, _ -> showProgress(false) }
+                    .subscribe({ onGetHistoryResult(it) }, { onError(it) })
+                    .unsubscribeOnDestroy()
 
     private fun onGetHistoryResult(result: Result<List<HistoryDay>>) {
         when (result) {
@@ -65,7 +76,7 @@ class HistoryPresenter @Inject constructor(context: Context,
                 hideError()
                 viewState.updateState(result.data)
             }
-            is Result.Error -> onError(result.weatherException, result.isShown)
+            is Result.Error -> onError(result.weatherException, true)
         }
     }
 }

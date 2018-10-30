@@ -12,5 +12,5 @@ interface LocationRepository {
 
     fun putLocationToDb(searchLocation: SearchLocation): Completable
 
-    fun searchLocationsAtServer(locationName: String): Single<Result<List<SearchLocation>>>
+    fun searchLocationsOnServer(locationName: String): Single<Result<List<SearchLocation>>>
 }
