@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.SearchView
 import android.view.Menu
+import android.widget.Toast
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -72,5 +73,9 @@ class MainActivity : MvpAppCompatActivity(), Navigator.OnExitListener, MainView 
     private fun searchViewClearFocus() = with(searchView) {
         clearFocus()
         setQuery("", false)
+    }
+
+    override fun onError() {
+        Toast.makeText(this, getString(R.string.unexpected_error), Toast.LENGTH_LONG).show()
     }
 }

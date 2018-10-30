@@ -13,4 +13,5 @@
     <string name="server_error">Server error is occurred. Try your action later</string>
     <string name="incorrect_server_data">Incorrect server data</string>
     <string name="location_error">Location not selected. Please choose it</string>
+    <string name="unexpected_error">Something wrong happens</string>
 </resources>

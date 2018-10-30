@@ -7,9 +7,11 @@ import android.support.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import com.arellomobile.mvp.MvpAppCompatFragment
+import com.gmail.segenpro.simpleweather.R
 import com.gmail.segenpro.simpleweather.SimpleWeatherApp
 import com.gmail.segenpro.simpleweather.di.AppComponent
 import com.squareup.leakcanary.LeakCanary
@@ -41,5 +43,9 @@ abstract class BaseFragment : MvpAppCompatFragment(), BaseView {
     override fun onDestroy() {
         super.onDestroy()
         refWatcher.watch(this)
+    }
+
+    override fun onError() {
+        Toast.makeText(context, getString(R.string.unexpected_error), Toast.LENGTH_LONG).show()
     }
 }

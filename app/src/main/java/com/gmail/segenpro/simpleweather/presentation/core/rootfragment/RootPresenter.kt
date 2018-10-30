@@ -57,6 +57,7 @@ class RootPresenter @Inject constructor(private val locationInteractor: Location
                 }
             }
             .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe({}, { onError(it) })
             .unsubscribeOnDestroy()
 }

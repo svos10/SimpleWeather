@@ -10,6 +10,7 @@ abstract class BasePresenter<View : BaseView> : MvpPresenter<View>() {
 
     protected fun onError(throwable: Throwable) {
         throwable.printStackTrace()
+        viewState.onError()
     }
 
     protected fun Disposable.unsubscribeOnDestroy(): Disposable = apply {
